@@ -1,11 +1,11 @@
-# vfetch
+# vfetcher
 
 [English](/README.md) | 简体中文
 
 用于数据请求的Vue组合式函数, 基于 [unjs/ofetch](https://github.com/unjs/ofetch)。
 
 ```sh
-$ pnpm i vfetch
+$ pnpm i vfetcher
 ```
 
 ## 特性
@@ -20,7 +20,7 @@ $ pnpm i vfetch
 useFetch默认情况下会在初始化时自动发出请求：
 
 ```ts
-import { useFetch } from 'vfetch'
+import { useFetch } from 'vfetcher'
 
 const { data } = useFetch('/return-ok')
 watchEffect(() => {
@@ -79,7 +79,7 @@ useFetch('/return-ok', {
 你可以自定义 `useFetch` 以设置你最喜欢的的默认选项：
 
 ```ts
-import { createUseFetch } from 'vfetch'
+import { createUseFetch } from 'vfetcher'
 
 export const useFetch = createUseFetch({
   baseURL: 'http://localhost:3000'

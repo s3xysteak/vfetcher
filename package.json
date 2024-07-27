@@ -1,17 +1,17 @@
 {
-  "name": "vfetch",
+  "name": "vfetcher",
   "type": "module",
   "version": "0.0.1",
   "private": false,
   "description": "Vue composables for fetching data, based on unjs/ofetch",
   "author": "s3xysteak",
   "license": "MIT",
-  "homepage": "https://github.com/s3xysteak/vfetch",
+  "homepage": "https://github.com/s3xysteak/vfetcher",
   "repository": {
     "type": "git",
-    "url": "https://github.com/s3xysteak/vfetch.git"
+    "url": "https://github.com/s3xysteak/vfetcher.git"
   },
-  "bugs": "https://github.com/s3xysteak/vfetch/issues",
+  "bugs": "https://github.com/s3xysteak/vfetcher/issues",
   "keywords": [
     "type",
     "utils",

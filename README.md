@@ -1,11 +1,11 @@
-# vfetch
+# vfetcher
 
 English | [简体中文](/README-zh.md)
 
 Vue composables for fetching data, based on [unjs/ofetch](https://github.com/unjs/ofetch).
 
 ```sh
-$ pnpm i vfetch
+$ pnpm i vfetcher
 ```
 
 ## Features
@@ -20,7 +20,7 @@ $ pnpm i vfetch
 By default, useFetch will automatically make a request during initialization:
 
 ```ts
-import { useFetch } from 'vfetch'
+import { useFetch } from 'vfetcher'
 
 const { data } = useFetch('/return-ok')
 watchEffect(() => {
@@ -79,7 +79,7 @@ useFetch('/return-ok', {
 You could customize `useFetch` to configure your favorite default options:
 
 ```ts
-import { createUseFetch } from 'vfetch'
+import { createUseFetch } from 'vfetcher'
 
 export const useFetch = createUseFetch({
   baseURL: 'http://localhost:3000'

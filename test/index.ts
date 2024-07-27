@@ -18,7 +18,7 @@ type CreateTestCallback = (
 ) => void
 
 export function createTest(port: number, fn: CreateTestCallback) {
-  describe.concurrent('vfetch', () => {
+  describe.concurrent('vfetcher', () => {
     const listener = shallowRef<Listener>()
     const getURL = (url: string) => joinURL(listener.value!.url, url)
 
