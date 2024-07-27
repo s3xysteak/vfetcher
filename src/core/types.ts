@@ -1,5 +1,5 @@
 import type { FetchOptions, MappedResponseType } from 'ofetch'
-import type { MaybeRefOrGetter, Ref, WatchSource } from 'vue'
+import type { ComputedRef, MaybeRefOrGetter, Ref, WatchSource } from 'vue'
 import type { Arrayable } from './utils/types'
 
 export type UseFetchStatus = 'idle' | 'pending' | 'success' | 'error'
@@ -48,3 +48,28 @@ interface ResponseMap {
 }
 
 export type ResponseType = keyof ResponseMap | 'json'
+
+export interface UsePagination {
+  <T = any, R extends ResponseType = ResponseType>(
+    _req: UseFetchParams,
+    options?: UsePaginationOptions<R>,
+  ): UsePaginationReturns<R, T>
+  create: <R extends ResponseType = ResponseType>(options?: UsePaginationOptions<R>) => UsePagination
+}
+
+export interface UsePaginationOptions<R extends ResponseType> extends UseFetchOptions<R> {
+  pageCurrentKey?: string
+  pageSizeKey?: string
+  defaultPageSize?: number
+  totalKey?: string
+  pageTotalKey?: string
+  useFetch?: UseFetch
+}
+
+export interface UsePaginationReturns<R extends ResponseType, T> extends UseFetchReturns<R, T> {
+  pageCurrent: Ref<number>
+  pageSize: Ref<number>
+
+  total: ComputedRef<number>
+  pageTotal: ComputedRef<number>
+}

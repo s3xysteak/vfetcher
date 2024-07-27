@@ -11,7 +11,7 @@ $ pnpm i vfetcher
 ## 特性
 
 - 精心设计的API: 刻意模仿 [nuxt/useFetch](https://nuxt.com.cn/docs/api/composables/use-fetch) 的api，以尽可能保持一致性，减少迁移负担。
-- 更多功能: 开箱即用的 节流/防抖/轮询...以及将来更多功能！
+- 更多功能: 开箱即用的 节流/防抖/轮询/分页...以及将来更多功能！
 
 ## 使用
 
@@ -230,6 +230,94 @@ dep.value = 'bar'
 -  `headers`: 请求头。
 -  `baseURL`: 基础路径，如 `useFetch('/foo', { baseURL: 'http://a/b/c' })` 将会向 `'http://a/b/c/foo'` 发出请求。
 
+> ... 也可以接受其他 `ofetch` 的一般选项，请查阅 [ofetch 官方文档](https://github.com/unjs/ofetch) 。
+
 ---
 
-> ... 也可以接受其他 `ofetch` 的一般选项，请查阅 [ofetch 官方文档](https://github.com/unjs/ofetch) 。
+## 分页
+
+使用 `usePagination` 方法处理分页。
+
+`import { usePagination } from 'vfetcher'`
+
+### 基本使用
+
+`usePagination`继承了`useFetch`的全部配置项:
+
+```ts
+usePagination('ok', {
+  immediate: false
+})
+```
+
+它自动的将分页参数合并到query内：
+
+```ts
+usePagination('getByPage')
+// request to => `/getByPage?current=1&pageSize=10`
+```
+
+相比于`useFetch`新增了一些返回值，他们同样是响应式的：
+
+```ts
+const { pageCurrent } = usePagination('getByPage')
+// request to => `/getByPage?current=1&pageSize=10`
+pageCurrent.value = 2
+// request to => `/getByPage?current=2&pageSize=10`
+```
+
+通过 `lodash - get` 获取分页大小与数据总数，你也可以手动进行配置：
+
+```ts
+const { data, total } = usePagination('getByPage', {
+  totalKey: 'res.total'
+})
+watchEffect(() => {
+  console.log(data.value)
+
+  if (data.value)
+    console.log(total.value)
+})
+
+// -> null
+// -> { res: { total:10, data:[ /* ... */]} }
+// -> 10
+```
+
+同样可以自定义默认配置项。为了方便共享配置项，也可以传入一个`useFetch`：
+
+```ts
+import {
+  usePagination as $Pagination,
+  useFetch as $fetch
+} from 'vfetcher'
+
+const useFetch = $fetch.create({
+  baseURL: 'http://localhost:3000'
+})
+const usePagination = usePagination.create({
+  totalKey: 'total',
+  pageCurrentKey: 'pageCurrent',
+  useFetch
+})
+```
+
+### 新增的返回值与选项
+
+#### 新增的返回值
+
+所有新增返回值都是响应式变量：
+
+- `pageCurrent`: 表示当前页码的number (number)。
+- `pageSize`: 表示单页数量的number (number)。
+- `total`: 表示数据总数的只读number (read-only number)。
+- `pageTotal`: 表示页码总数的只读number (read-only number)。
+
+#### 新增的选项
+
+- `pageCurrentKey`: 表示当前页码的键名，用于在query中传递。默认为`'current'`。
+- `pageSizeKey`: 表示单页数量的键名，用于在query中传递。默认为`'pageSize'`。
+- `defaultPageSize`: 表示默认单页数量的number，在`immediate: true`时很有用。 默认为`10`。
+- `totalKey`: 获取数据总数的键名，通过`lodash - get`在返回数据中获取。默认为`'total'`。
+- `pageTotalKey`: 获取页码总数的键名，通过`lodash - get`在返回数据中获取。默认为`'totalPage'`。
+- `useFetch`: 传入一个`useFetch`方法，这在共享 `useFetch` 与 `usePagination` 选项时很有用。默认为默认情况下的`useFetch`。

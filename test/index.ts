@@ -62,6 +62,34 @@ function beforeAllCreateApp() {
       eventHandler(event => readBody(event)),
     )
     .use(
+      '/getByPage',
+      eventHandler((event) => {
+        enum paginationKey {
+          CURRENT = 'current',
+
+          TOTAL_KEY = 'total',
+          PAGE_SIZE_KEY = 'pageSize',
+        }
+        const data = Array.from({ length: 100 }, (_, i) => ({ id: i + 1, name: `data-${i + 1}` }))
+        const query: Record<string, string> = getQuery(event.node.req.url || '')
+
+        const currentPage = Number.parseInt(query[paginationKey.CURRENT]) || 1
+        const pageSize = Number.parseInt(query[paginationKey.PAGE_SIZE_KEY]) || 10
+
+        const totalItems = data.length
+        const startIndex = (currentPage - 1) * pageSize
+        const endIndex = Math.min(startIndex + pageSize, totalItems)
+        const pageData = data.slice(startIndex, endIndex)
+
+        return {
+          [paginationKey.TOTAL_KEY]: totalItems,
+          [paginationKey.PAGE_SIZE_KEY]: pageSize,
+          [paginationKey.CURRENT ?? 'pageCurrent']: currentPage,
+          data: pageData,
+        }
+      }),
+    )
+    .use(
       '/binary',
       eventHandler((event) => {
         event.node.res.setHeader('Content-Type', 'application/octet-stream')

@@ -11,7 +11,7 @@ $ pnpm i vfetcher
 ## Features
 
 - Carefully designed API: Intentionally mimicking the [nuxt/useFetch](https://nuxt.com.cn/docs/api/composables/use-fetch) API to maintain consistency as much as possible and reduce migration burden.
-- More features: Throttling/debouncing/polling out of the box... and more features to come!
+- More features: Throttling/debouncing/polling/pagination out of the box... and more features to come!
 
 ## Usage
 
@@ -232,6 +232,94 @@ For parameters that are watched by default:
 - `headers`: The request headers.
 - `baseURL`: The base path, e.g., `useFetch('/foo', { baseURL: 'http://a/b/c' })` will make a request to `'http://a/b/c/foo'`.
 
+> ... It also accepts other general `ofetch` options. Please refer to the [ofetch official documentation](https://github.com/unjs/ofetch).
+
 ---
 
-> ... it also accepts other general `ofetch` options. Please refer to the [ofetch official documentation](https://github.com/unjs/ofetch).
+## Pagination
+
+Use `usePagination` function to handle pagination.
+
+`import { usePagination } from 'vfetcher'`
+
+### Basic usage
+
+`usePagination` extends all options of `useFetch`:
+
+```ts
+usePagination('ok', {
+  immediate: false
+})
+```
+
+It automatically merge the params of pagination to query:
+
+```ts
+usePagination('getByPage')
+// request to => `/getByPage?current=1&pageSize=10`
+```
+
+Compared to `useFetch`, some new return values have been added, which are also responsive:
+
+```ts
+const { pageCurrent } = usePagination('getByPage')
+// request to => `/getByPage?current=1&pageSize=10`
+pageCurrent.value = 2
+// request to => `/getByPage?current=2&pageSize=10`
+```
+
+Get pageSize and total data counts by `lodash - get` , or you can configure the param key manually:
+
+```ts
+const { data, total } = usePagination('getByPage', {
+  totalKey: 'res.total'
+})
+watchEffect(() => {
+  console.log(data.value)
+
+  if (data.value)
+    console.log(total.value)
+})
+
+// -> null
+// -> { res: { total:10, data:[ /* ... */]} }
+// -> 10
+```
+
+It can also customize the default options. To facilitate sharing of options, you can pass in a `useFetch` directly:
+
+```ts
+import {
+  usePagination as $Pagination,
+  useFetch as $fetch
+} from 'vfetcher'
+
+const useFetch = $fetch.create({
+  baseURL: 'http://localhost:3000'
+})
+const usePagination = usePagination.create({
+  totalKey: 'total',
+  pageCurrentKey: 'pageCurrent',
+  useFetch
+})
+```
+
+### New Return Values and Options
+
+#### New Return Values
+
+All new return values are reactive variables:
+
+- `pageCurrent`: Indicates the current page number (number).
+- `pageSize`: Indicates the number of items per page (number).
+- `total`: Indicates the total number of items (read-only number).
+- `pageTotal`: Indicates the total number of pages (read-only number).
+
+#### New Options
+
+- `pageCurrentKey`: Indicates the key name for the current page number, used in the query. Default is `'current'`.
+- `pageSizeKey`: Indicates the key name for the number of items per page, used in the query. Default is `'pageSize'`.
+- `defaultPageSize`: Indicates the default number of items per page (number), useful when `immediate: true`. Default is `10`.
+- `totalKey`: The key name for fetching the total number of items, obtained from the returned data using `lodash - get`. Default is `'total'`.
+- `pageTotalKey`: The key name for fetching the total number of pages, obtained from the returned data using `lodash - get`. Default is `'totalPage'`.
+- `useFetch`: Pass in a `useFetch` method, useful when sharing `useFetch` and `usePagination` options. Default is the built-in `useFetch`.
