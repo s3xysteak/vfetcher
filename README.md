@@ -87,14 +87,31 @@ useFetch('/return-ok', {
 You could customize `useFetch` to configure your favorite default options:
 
 ```ts
-import { createUseFetch } from 'vfetcher'
+import { useFetch as $ } from 'vfetcher'
 
-export const useFetch = createUseFetch({
+export const useFetch = $.create({
   baseURL: 'http://localhost:3000'
 })
 
 useFetch('ok')
 // request to => 'http://localhost:3000/ok'
+```
+
+The new `useFetch` will extend the default options of the previous one:
+
+```ts
+import { useFetch as $1 } from 'vfetcher'
+
+const $2 = $1.create({
+  baseURL: 'http://localhost:3000'
+})
+const useFetch = $2.create({
+  immediate: false
+})
+
+useFetch('ok')
+// Equal to:
+// `useFetch('ok', { baseURL: 'http://localhost:3000', immediate: false })`
 ```
 
 ### Manually control

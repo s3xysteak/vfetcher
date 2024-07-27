@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import { $fetch } from 'ofetch'
-import { createUseFetch, useFetch } from '../src'
+import { useFetch } from '../src'
 import { createTest, next, sleep } from '.'
 
 createTest(3000, (listener, getURL) => {

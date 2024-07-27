@@ -87,14 +87,31 @@ useFetch('/return-ok', {
 你可以自定义 `useFetch` 以设置你最喜欢的默认选项：
 
 ```ts
-import { createUseFetch } from 'vfetcher'
+import { useFetch as $ } from 'vfetcher'
 
-export const useFetch = createUseFetch({
+export const useFetch = $.create({
   baseURL: 'http://localhost:3000'
 })
 
 useFetch('ok')
 // request to => 'http://localhost:3000/ok'
+```
+
+新的 `useFetch` 会继承前一个的默认选项：
+
+```ts
+import { useFetch as $1 } from 'vfetcher'
+
+const $2 = $1.create({
+  baseURL: 'http://localhost:3000'
+})
+const useFetch = $2.create({
+  immediate: false
+})
+
+useFetch('ok')
+// Equal to:
+// `useFetch('ok', { baseURL: 'http://localhost:3000', immediate: false })`
 ```
 
 ### 手动控制

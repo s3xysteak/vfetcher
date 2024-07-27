@@ -1,8 +1,10 @@
-export { useFetch } from './core/useFetch'
-export { createUseFetch } from './core/createUseFetch'
+import { createUseFetch } from './core/useFetch'
+
+export const useFetch = createUseFetch()
 
 // types
 export type {
+  UseFetch,
   UseFetchParams,
   UseFetchOptions,
   UseFetchReturns,

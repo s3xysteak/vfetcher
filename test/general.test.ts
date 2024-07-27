@@ -1,6 +1,6 @@
 import { computed, effectScope, ref } from 'vue'
 import { expect, it } from 'vitest'
-import { createUseFetch, useFetch } from '../src'
+import { useFetch } from '../src'
 import { createTest, next, sleep } from '.'
 
 createTest(3001, (listener, getURL) => {
@@ -94,10 +94,15 @@ createTest(3001, (listener, getURL) => {
     expect(times.value).toBe(2)
   })
 
-  it('createUseFetch', async () => {
-    const $ = createUseFetch({ baseURL: listener.value.url, immediate: false })
-    const { data, execute } = $('ok')
-    await execute()
-    expect(data.value).toBe('ok')
+  it('useFetch.create', async () => {
+    const $1 = useFetch.create({ immediate: false })
+    const { data: d1, execute: e1 } = $1(getURL('ok'))
+    await e1()
+    expect(d1.value).toBe('ok')
+
+    const $2 = $1.create({ baseURL: listener.value.url })
+    const { data: d2, execute: e2 } = $2('ok')
+    await e2()
+    expect(d2.value).toBe('ok')
   })
 })

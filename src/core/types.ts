@@ -15,6 +15,14 @@ export interface UseFetchReactiveOptions {
   baseURL?: MaybeRefOrGetter<FetchOptions['baseURL']>
 }
 
+export interface UseFetch {
+  <T = any, R extends ResponseType = ResponseType>(
+    _req: UseFetchParams,
+    options?: UseFetchOptions<R>,
+  ): UseFetchReturns<R, T>
+  create: <R extends ResponseType = ResponseType>(options?: UseFetchOptions<R>) => UseFetch
+}
+
 export interface UseFetchOptions<R extends ResponseType> extends UseFetchReactiveOptions, Omit<FetchOptions<R>, keyof UseFetchReactiveOptions> {
   immediate?: boolean
   watch?: Arrayable<WatchSource> | false
