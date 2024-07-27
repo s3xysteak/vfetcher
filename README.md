@@ -67,6 +67,14 @@ The second parameter accepts a series of configuration options, including all th
 
 ```ts
 useFetch('/return-ok', {
+  async onRequest(ctx) {
+    ctx.options.headers ??= new Headers()
+    const headers = ctx.options.headers
+    if (headers instanceof Headers) {
+      await sleep(10) // mock request
+      headers.append('token', 'my-auth-token')
+    }
+  },
   onResponse(ctx) {
     console.log(ctx.response._data)
     // -> 'ok'

@@ -54,11 +54,12 @@ function beforeAllCreateApp() {
       eventHandler(event => event.node.req.url),
     )
     .use(
+      '/token',
+      eventHandler(event => event.node.req.headers.token),
+    )
+    .use(
       '/post',
-      eventHandler(async event => ({
-        body: await readBody(event),
-        headers: event.node.req.headers,
-      })),
+      eventHandler(event => readBody(event)),
     )
     .use(
       '/binary',

@@ -67,6 +67,14 @@ query.value = { two: '2' }
 
 ```ts
 useFetch('/return-ok', {
+  async onRequest(ctx) {
+    ctx.options.headers ??= new Headers()
+    const headers = ctx.options.headers
+    if (headers instanceof Headers) {
+      await sleep(10) // mock request
+      headers.append('token', 'my-auth-token')
+    }
+  },
   onResponse(ctx) {
     console.log(ctx.response._data)
     // -> 'ok'
@@ -76,7 +84,7 @@ useFetch('/return-ok', {
 
 ### 自定义默认参数
 
-你可以自定义 `useFetch` 以设置你最喜欢的的默认选项：
+你可以自定义 `useFetch` 以设置你最喜欢的默认选项：
 
 ```ts
 import { createUseFetch } from 'vfetcher'

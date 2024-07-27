@@ -4,10 +4,25 @@ import { createUseFetch, useFetch } from '../src'
 import { createTest, next, sleep } from '.'
 
 createTest(3000, (listener, getURL) => {
-  it('pre-try', async () => {
+  it('$fetch', async () => {
     expect(await $fetch(getURL('ok'))).toBe('ok')
     expect(await $fetch(getURL('params'), { query: { one: '1' } })).toEqual({ one: '1' })
     expect(await $fetch('ok', { baseURL: listener.value.url })).toBe('ok')
+    expect(await $fetch(getURL('url/123'))).toBe('/123')
+    expect(await $fetch(getURL('post'), {
+      method: 'post',
+      body: { one: 1 },
+    })).toEqual({ one: 1 })
+    expect(await $fetch(getURL('token'), {
+      async onRequest(ctx) {
+        ctx.options.headers ??= new Headers()
+        const headers = ctx.options.headers
+        if (headers instanceof Headers) {
+          await sleep(10)
+          headers.append('token', 'my-auth-token')
+        }
+      },
+    })).toBe('my-auth-token')
 
     let testResponse = 'not Ok'
     await $fetch(getURL('ok'), {
