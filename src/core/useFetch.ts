@@ -74,7 +74,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     watch(
       ctx.optionsComposable.watch === false
         ? []
-        : [req, watchOptions, ...(ctx.optionsComposable.watch ? toArray(ctx.optionsComposable.watch) : [])],
+        : [req, watchOptions, ...toArray(ctx.optionsComposable.watch || [])],
       () => $execute(),
     )
 
