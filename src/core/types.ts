@@ -23,7 +23,7 @@ export interface UseFetch {
   create: <R extends ResponseType = ResponseType>(options?: UseFetchOptions<R>) => UseFetch
 }
 
-export interface UseFetchOptions<R extends ResponseType> extends UseFetchReactiveOptions, Omit<FetchOptions<R>, keyof UseFetchReactiveOptions> {
+export interface UseFetchOptions<R extends ResponseType = ResponseType> extends UseFetchReactiveOptions, Omit<FetchOptions<R>, keyof UseFetchReactiveOptions> {
   /** If make a request during initialization */
   immediate?: boolean
 
@@ -43,7 +43,7 @@ export interface UseFetchOptions<R extends ResponseType> extends UseFetchReactiv
   ofetch?: $Fetch
 }
 
-export interface UseFetchReturns<R extends ResponseType, T> {
+export interface UseFetchReturns<R extends ResponseType = ResponseType, T = any> {
   /** The data which `ofetch` returns */
   data: Ref<MappedResponseType<R, T> | null>
 
@@ -84,7 +84,7 @@ export interface UsePagination {
   create: <R extends ResponseType = ResponseType>(options?: UsePaginationOptions<R>) => UsePagination
 }
 
-export interface UsePaginationOptions<R extends ResponseType> extends UseFetchOptions<R> {
+export interface UsePaginationOptions<R extends ResponseType = ResponseType> extends UseFetchOptions<R> {
   pageCurrentKey?: string
   pageSizeKey?: string
   defaultPageSize?: number
@@ -93,7 +93,7 @@ export interface UsePaginationOptions<R extends ResponseType> extends UseFetchOp
   useFetch?: UseFetch
 }
 
-export interface UsePaginationReturns<R extends ResponseType, T> extends UseFetchReturns<R, T> {
+export interface UsePaginationReturns<R extends ResponseType = ResponseType, T = any> extends UseFetchReturns<R, T> {
   /** A number to indicate which page you are on */
   pageCurrent: Ref<number>
   /** A number to indicate the size of a page */
