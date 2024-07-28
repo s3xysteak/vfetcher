@@ -25,7 +25,7 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
 
       useFetch = defaultUseFetch,
       ...useFetchOptions
-    } = Object.assign(defaultOptions, options)
+    } = { ...defaultOptions, ...options }
 
     const pageSize = ref<number>(defaultPageSize)
     const pageCurrent = ref<number>(1)
@@ -60,7 +60,7 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
     }
   }
 
-  usePagination.create = newDefaultOptions => createUsePagination(Object.assign(defaultOptions, newDefaultOptions))
+  usePagination.create = newDefaultOptions => createUsePagination({ ...defaultOptions, ...newDefaultOptions })
 
   return usePagination
 }

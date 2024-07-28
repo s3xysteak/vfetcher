@@ -1,5 +1,6 @@
 import { computed, effectScope, ref } from 'vue'
 import { expect, it } from 'vitest'
+import { $fetch } from 'ofetch'
 import { useFetch } from '../src'
 import { createTest, next, sleep } from '.'
 
@@ -104,5 +105,18 @@ createTest(3001, (listener, getURL) => {
     const { data: d2, execute: e2 } = $2('ok')
     await e2()
     expect(d2.value).toBe('ok')
+  })
+
+  it('customize ofetch', async () => {
+    const u = useFetch.create({
+      immediate: false,
+      onRequest({ options }) {
+        options.query = { one: '1' }
+      },
+    })
+    const { data, execute } = u(getURL('query'))
+    await execute()
+
+    expect(data.value).toEqual({ one: '1' })
   })
 })

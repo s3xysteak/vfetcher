@@ -208,18 +208,6 @@ dep.value = 'bar'
 import { ofetch } from 'vfetcher/ofetch'
 ```
 
-### Use configured `ofetch` in `useFetch`
-
-You can directly pass `ofetch` in the option of `useFetch`:
-
-```ts
-import { useFetch as $useFetch } from 'vfetcher'
-import { $fetch } from 'vfetcher/ofetch'
-
-export const $ = $fetch.create({ baseURL: 'http://localhost:3000' })
-export const useFetch = $useFetch.create({ ofetch: $ })
-```
-
 ## Returns and options
 
 ### Returns

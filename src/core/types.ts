@@ -38,9 +38,6 @@ export interface UseFetchOptions<R extends ResponseType = ResponseType> extends 
 
   /** Indicate the throttle wait time in millisecond */
   throttleInterval?: MaybeRefOrGetter<number>
-
-  /** Configure `ofetch` function used in `useFetch` */
-  ofetch?: $Fetch
 }
 
 export interface UseFetchReturns<R extends ResponseType = ResponseType, T = any> {

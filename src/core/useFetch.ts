@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { computed, reactive, ref, shallowRef, toValue, watch } from 'vue'
-import type { MappedResponseType } from 'ofetch'
+import { $fetch, type MappedResponseType } from 'ofetch'
 import { createContext } from './ctx'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 import { useDebounceFn } from './utils/useDebounceFn'
@@ -21,7 +21,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     _req: UseFetchParams,
     options: UseFetchOptions<R> = {},
   ): UseFetchReturns<R, T> {
-    const ctx = createContext<R>(Object.assign(options, defaultOptions))
+    const ctx = createContext<R>({ ...options, ...defaultOptions })
 
     const status = ref<UseFetchStatus>('idle')
     const pending = ref(false)
@@ -36,7 +36,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       status.value = 'pending'
       pending.value = true
 
-      data.value = await ctx.optionsComposable.ofetch<T, R>(toValue(req), {
+      data.value = await $fetch<T, R>(toValue(req), {
         ...ctx.options$fetch,
         ...Object.fromEntries(
           Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
@@ -89,7 +89,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
   }
 
   useFetch.create = newDefaultOptions =>
-    createUseFetch(Object.assign(defaultOptions, newDefaultOptions))
+    createUseFetch({ ...defaultOptions, ...newDefaultOptions })
 
   return useFetch
 }

@@ -208,18 +208,6 @@ dep.value = 'bar'
 import { ofetch } from 'vfetcher/ofetch'
 ```
 
-### 在 `useFetch` 中使用已配置的 `ofetch`
-
-你可以直接将`ofetch`传入`useFetch`的选项内：
-
-```ts
-import { useFetch as $useFetch } from 'vfetcher'
-import { $fetch } from 'vfetcher/ofetch'
-
-export const $ = $fetch.create({ baseURL: 'http://localhost:3000' })
-export const useFetch = $useFetch.create({ ofetch: $ })
-```
-
 ## 返回值与选项
 
 ### 返回值
