@@ -1,7 +1,7 @@
 {
   "name": "vfetcher",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "private": false,
   "description": "Vue composables for fetching data, based on unjs/ofetch",
   "author": "s3xysteak",
