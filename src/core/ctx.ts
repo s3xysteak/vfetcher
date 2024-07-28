@@ -1,3 +1,4 @@
+import { $fetch } from 'ofetch'
 import type { ResponseType, UseFetchOptions } from './types'
 
 export function createContext<R extends ResponseType>(userOptions: UseFetchOptions<R>) {
@@ -15,6 +16,7 @@ function resolveOptions<R extends ResponseType>(options: UseFetchOptions<R>) {
     pollingInterval,
     debounceInterval,
     throttleInterval,
+    ofetch = $fetch,
 
     cache,
     credentials,
@@ -50,6 +52,7 @@ function resolveOptions<R extends ResponseType>(options: UseFetchOptions<R>) {
       pollingInterval,
       debounceInterval,
       throttleInterval,
+      ofetch,
     },
     optionsWatch,
     options$fetch: {

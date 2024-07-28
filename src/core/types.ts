@@ -1,4 +1,4 @@
-import type { FetchOptions, MappedResponseType } from 'ofetch'
+import type { $Fetch, FetchOptions, MappedResponseType } from 'ofetch'
 import type { ComputedRef, MaybeRefOrGetter, Ref, WatchSource } from 'vue'
 import type { Arrayable } from './utils/types'
 
@@ -38,6 +38,9 @@ export interface UseFetchOptions<R extends ResponseType> extends UseFetchReactiv
 
   /** Indicate the throttle wait time in millisecond */
   throttleInterval?: MaybeRefOrGetter<number>
+
+  /** Configure `ofetch` function used in `useFetch` */
+  ofetch?: $Fetch
 }
 
 export interface UseFetchReturns<R extends ResponseType, T> {

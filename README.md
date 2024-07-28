@@ -200,6 +200,26 @@ dep.value = 'bar'
 // request to => 'ok'
 ```
 
+## Re-export ofetch
+
+`vfetcher` re-export all exports of `ofetch` so you can directly use ofetch：
+
+```ts
+import { ofetch } from 'vfetcher/ofetch'
+```
+
+### Use configured `ofetch` in `useFetch`
+
+You can directly pass `ofetch` in the option of `useFetch`:
+
+```ts
+import { useFetch as $useFetch } from 'vfetcher'
+import { $fetch } from 'vfetcher/ofetch'
+
+export const $ = $fetch.create({ baseURL: 'http://localhost:3000' })
+export const useFetch = $useFetch.create({ ofetch: $ })
+```
+
 ## Returns and options
 
 ### Returns
@@ -221,6 +241,7 @@ Here is the translation:
 - `pollingInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the interval time for polling. By default, polling is not enabled.
 - `debounceInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the debounce delay time. By default, debounce is not enabled.
 - `throttleInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the throttle wait time. By default, throttling is not enabled.
+- `ofetch`: ofetch function, used to share options. Default is the built-in ofetch。
 
 For parameters that are watched by default:
 

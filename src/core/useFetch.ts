@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { computed, reactive, ref, shallowRef, toValue, watch } from 'vue'
-import { $fetch, type MappedResponseType } from 'ofetch'
+import type { MappedResponseType } from 'ofetch'
 import { createContext } from './ctx'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 import { useDebounceFn } from './utils/useDebounceFn'
@@ -36,7 +36,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       status.value = 'pending'
       pending.value = true
 
-      data.value = await $fetch<T, R>(toValue(req), {
+      data.value = await ctx.optionsComposable.ofetch<T, R>(toValue(req), {
         ...ctx.options$fetch,
         ...Object.fromEntries(
           Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),

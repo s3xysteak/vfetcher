@@ -200,6 +200,26 @@ dep.value = 'bar'
 // request to => 'ok'
 ```
 
+## 重导出 ofetch
+
+`vfetcher` 重导出了 `ofetch` 的全部导出以方便直接使用ofetch：
+
+```ts
+import { ofetch } from 'vfetcher/ofetch'
+```
+
+### 在 `useFetch` 中使用已配置的 `ofetch`
+
+你可以直接将`ofetch`传入`useFetch`的选项内：
+
+```ts
+import { useFetch as $useFetch } from 'vfetcher'
+import { $fetch } from 'vfetcher/ofetch'
+
+export const $ = $fetch.create({ baseURL: 'http://localhost:3000' })
+export const useFetch = $useFetch.create({ ofetch: $ })
+```
+
 ## 返回值与选项
 
 ### 返回值
@@ -219,6 +239,7 @@ dep.value = 'bar'
 - `pollingInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示轮询的间隔时间。默认不进行轮询。
 - `debounceInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示防抖的延迟时间。默认不进行防抖。
 - `throttleInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示节流的等待时间。默认不进行节流。
+- `ofetch`: ofetch 函数，用于共享配置项。默认为默认状态的 ofetch。
 
 对于默认情况下进行监听的参数：
 
