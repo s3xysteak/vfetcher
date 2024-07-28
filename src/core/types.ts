@@ -87,7 +87,6 @@ export interface UsePaginationOptions<R extends ResponseType = ResponseType> ext
   defaultPageSize?: number
   totalKey?: string
   pageTotalKey?: string
-  useFetch?: UseFetch
 }
 
 export interface UsePaginationReturns<R extends ResponseType = ResponseType, T = any> extends UseFetchReturns<R, T> {

@@ -1,5 +1,5 @@
 import { computed, ref, toValue } from 'vue'
-import { useFetch as defaultUseFetch } from '..'
+import { useFetch } from '..'
 import type {
   ResponseType,
   UseFetchOptions,
@@ -25,7 +25,6 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
       totalKey = 'total',
       pageTotalKey = 'totalPage',
 
-      useFetch = defaultUseFetch,
       ...useFetchOptions
     } = { ...defaultOptions, ...options }
 

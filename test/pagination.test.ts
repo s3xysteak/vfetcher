@@ -64,10 +64,9 @@ createTest(3002, (listener, getURL) => {
   })
 
   it('usePagination.create', async () => {
-    const $fetch = useFetch.create({ baseURL: listener.value.url })
     const $ = usePagination.create({
       pageCurrentKey: 'pageCurrent',
-      useFetch: $fetch,
+      baseURL: listener.value.url,
     })
 
     let key: string

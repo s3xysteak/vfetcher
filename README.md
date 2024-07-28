@@ -295,24 +295,6 @@ watchEffect(() => {
 // -> 10
 ```
 
-It can also customize the default options. To facilitate sharing of options, you can pass in a `useFetch` directly:
-
-```ts
-import {
-  usePagination as $Pagination,
-  useFetch as $fetch
-} from 'vfetcher'
-
-const useFetch = $fetch.create({
-  baseURL: 'http://localhost:3000'
-})
-const usePagination = usePagination.create({
-  totalKey: 'total',
-  pageCurrentKey: 'pageCurrent',
-  useFetch
-})
-```
-
 ### New Return Values and Options
 
 #### New Return Values
@@ -331,4 +313,3 @@ All new return values are reactive variables:
 - `defaultPageSize`: Indicates the default number of items per page (number), useful when `immediate: true`. Default is `10`.
 - `totalKey`: The key name for fetching the total number of items, obtained from the returned data using `lodash - get`. Default is `'total'`.
 - `pageTotalKey`: The key name for fetching the total number of pages, obtained from the returned data using `lodash - get`. Default is `'totalPage'`.
-- `useFetch`: Pass in a `useFetch` method, useful when sharing `useFetch` and `usePagination` options. Default is the built-in `useFetch`.

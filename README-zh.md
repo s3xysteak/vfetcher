@@ -293,24 +293,6 @@ watchEffect(() => {
 // -> 10
 ```
 
-同样可以自定义默认配置项。为了方便共享配置项，也可以传入一个`useFetch`：
-
-```ts
-import {
-  usePagination as $Pagination,
-  useFetch as $fetch
-} from 'vfetcher'
-
-const useFetch = $fetch.create({
-  baseURL: 'http://localhost:3000'
-})
-const usePagination = usePagination.create({
-  totalKey: 'total',
-  pageCurrentKey: 'pageCurrent',
-  useFetch
-})
-```
-
 ### 新增的返回值与选项
 
 #### 新增的返回值
@@ -329,4 +311,3 @@ const usePagination = usePagination.create({
 - `defaultPageSize`: 表示默认单页数量的number，在`immediate: true`时很有用。 默认为`10`。
 - `totalKey`: 获取数据总数的键名，通过`lodash - get`在返回数据中获取。默认为`'total'`。
 - `pageTotalKey`: 获取页码总数的键名，通过`lodash - get`在返回数据中获取。默认为`'totalPage'`。
-- `useFetch`: 传入一个`useFetch`方法，这在共享 `useFetch` 与 `usePagination` 选项时很有用。默认为默认情况下的`useFetch`。
