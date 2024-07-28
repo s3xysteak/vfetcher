@@ -47,7 +47,7 @@ export function useTimeoutPoll(
   }
 }
 
-interface UseTimeoutPollReturns {
+export interface UseTimeoutPollReturns {
   /**
    * A ref indicate whether a pausable instance is active
    */

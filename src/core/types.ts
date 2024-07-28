@@ -67,7 +67,7 @@ export interface UseFetchReturns<R extends ResponseType, T> {
   status: Ref<UseFetchStatus>
 }
 
-interface ResponseMap {
+export interface ResponseMap {
   blob: Blob
   text: string
   arrayBuffer: ArrayBuffer
