@@ -16,6 +16,8 @@ import type {
   UseFetchStatus,
 } from './types'
 
+export const useFetchDefaultOptionsKey = Symbol('useFetchDefaultOptionsKey')
+
 export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
   const useFetch: UseFetch = function <T = any, R extends ResponseType = ResponseType>(
     _req: UseFetchParams,
@@ -90,6 +92,9 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
 
   useFetch.create = newDefaultOptions =>
     createUseFetch({ ...defaultOptions, ...newDefaultOptions })
+
+  // @ts-expect-error - for internal use
+  useFetch[useFetchDefaultOptionsKey] = { ...defaultOptions }
 
   return useFetch
 }

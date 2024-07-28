@@ -2,12 +2,14 @@ import { computed, ref, toValue } from 'vue'
 import { useFetch as defaultUseFetch } from '..'
 import type {
   ResponseType,
+  UseFetchOptions,
   UseFetchParams,
   UsePagination,
   UsePaginationOptions,
   UsePaginationReturns,
 } from './types'
 import { objectGet, toArray } from './utils/general'
+import { useFetchDefaultOptionsKey } from './useFetch'
 
 export function createUsePagination(defaultOptions: UsePaginationOptions<any> = {}) {
   const usePagination: UsePagination = function <T = any, R extends ResponseType = ResponseType>(
@@ -30,19 +32,36 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
     const pageSize = ref<number>(defaultPageSize)
     const pageCurrent = ref<number>(1)
 
+    // @ts-expect-error - for internal use
+    const useFetchDefaultOptions: UseFetchOptions = useFetch[useFetchDefaultOptionsKey]
+
     const val = useFetch(_req, {
       ...useFetchOptions,
       watch: useFetchOptions.watch !== false && [pageSize, pageCurrent, ...toArray(useFetchOptions.watch || [])],
-      onRequest(ctx) {
+      onRequest(context) {
+        useFetchDefaultOptions.onRequest?.(context)
+
         const assignPaginationKey = (p: Record<string, any> = {}) =>
           Object.assign(p, {
             [pageCurrentKey]: p[pageCurrentKey] || toValue(pageCurrent),
             [pageSizeKey]: p[pageSizeKey] || toValue(pageSize),
           })
 
-        ctx.options.query = assignPaginationKey(ctx.options.query)
-        ctx.options.params = assignPaginationKey(ctx.options.params)
-        useFetchOptions?.onRequest?.(ctx)
+        context.options.query = assignPaginationKey(context.options.query)
+        context.options.params = assignPaginationKey(context.options.params)
+        useFetchOptions?.onRequest?.(context)
+      },
+      onRequestError(context) {
+        useFetchDefaultOptions.onRequestError?.(context)
+        useFetchOptions.onRequestError?.(context)
+      },
+      onResponse(context) {
+        useFetchDefaultOptions.onResponse?.(context)
+        useFetchOptions.onResponse?.(context)
+      },
+      onResponseError(context) {
+        useFetchDefaultOptions.onResponseError?.(context)
+        useFetchOptions.onResponseError?.(context)
       },
     })
 

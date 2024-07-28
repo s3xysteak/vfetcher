@@ -1,4 +1,4 @@
-import type { $Fetch, FetchOptions, MappedResponseType } from 'ofetch'
+import type { FetchOptions, MappedResponseType } from 'ofetch'
 import type { ComputedRef, MaybeRefOrGetter, Ref, WatchSource } from 'vue'
 import type { Arrayable } from './utils/types'
 
