@@ -200,7 +200,7 @@ dep.value = 'bar'
 // request to => 'ok'
 ```
 
-### 基于响应式变量的钩子
+### Hooks based on reactive variables
 
 The `status` returned by useFetch shows the current status. By watching `status`, you can achieve callbacks for different statuses. `status` is always `idle` in the beginning to indicate idle, becomes `pending` before sending a request, becomes `success` after a successful request, or becomes `error` when the request fails.
 
@@ -245,7 +245,6 @@ Here is the translation:
 - `pollingInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the interval time for polling. By default, polling is not enabled.
 - `debounceInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the debounce delay time. By default, debounce is not enabled.
 - `throttleInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the throttle wait time. By default, throttling is not enabled.
-- `ofetch`: ofetch function, used to share options. Default is the built-in ofetch。
 
 For parameters that are watched by default:
 

@@ -243,7 +243,6 @@ import { ofetch } from 'vfetcher/ofetch'
 - `pollingInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示轮询的间隔时间。默认不进行轮询。
 - `debounceInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示防抖的延迟时间。默认不进行防抖。
 - `throttleInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示节流的等待时间。默认不进行节流。
-- `ofetch`: ofetch 函数，用于共享配置项。默认为默认状态的 ofetch。
 
 对于默认情况下进行监听的参数：
 
