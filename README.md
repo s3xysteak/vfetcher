@@ -135,6 +135,36 @@ await execute()
 // -> 'ok'
 ```
 
+### Dependency refresh
+
+The `watch` option receive the same variables as the first parameter of Vue's `watch`. It will automatically request when these variables changed.
+
+```ts
+const dep = ref('foo')
+useFetch('ok', {
+  watch: [dep]
+})
+// request to => 'ok'
+dep.value = 'bar'
+// request to => 'ok'
+```
+
+### Hooks based on reactive variables
+
+The `status` returned by useFetch shows the current status. By watching `status`, you can achieve callbacks for different statuses. `status` is always `idle` in the beginning to indicate idle, becomes `pending` before sending a request, becomes `success` after a successful request, or becomes `error` when the request fails.
+
+```ts
+const { status } = useFetch('ok')
+
+// Equal to `onSuccess` hook:
+watch(status, (v) => {
+  if (v !== 'success')
+    return
+
+  onSuccess()
+})
+```
+
 ### Polling
 
 Polling requests by using the `pollingInterval` option:
@@ -184,36 +214,6 @@ execute()
 // after about 2 seconds
 await execute()
 // request to => 'ok'
-```
-
-### Dependency refresh
-
-The `watch` option receive the same variables as the first parameter of Vue's `watch`. It will automatically request when these variables changed.
-
-```ts
-const dep = ref('foo')
-useFetch('ok', {
-  watch: [dep]
-})
-// request to => 'ok'
-dep.value = 'bar'
-// request to => 'ok'
-```
-
-### Hooks based on reactive variables
-
-The `status` returned by useFetch shows the current status. By watching `status`, you can achieve callbacks for different statuses. `status` is always `idle` in the beginning to indicate idle, becomes `pending` before sending a request, becomes `success` after a successful request, or becomes `error` when the request fails.
-
-```ts
-const { status } = useFetch('ok')
-
-// Equal to `onSuccess` hook:
-watch(status, (v) => {
-  if (v !== 'success')
-    return
-
-  onSuccess()
-})
 ```
 
 ## Re-export ofetch

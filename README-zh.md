@@ -135,6 +135,36 @@ await execute()
 // -> 'ok'
 ```
 
+### 依赖刷新
+
+`watch` 选项接受与 Vue 的 `watch` 第一个参数相同的值。在这些响应式变量发生改变时，将会自动发出请求：
+
+```ts
+const dep = ref('foo')
+useFetch('ok', {
+  watch: [dep]
+})
+// request to => 'ok'
+dep.value = 'bar'
+// request to => 'ok'
+```
+
+### 基于响应式变量的钩子
+
+useFetch的返回值 `status` 表示了当前状态，通过对status的监听，你可以实现在不同情况下的回调。status 在最初总是`idle`表示空闲，在请求发出前变为`pending`表示等待响应，请求成功后变为`success`表示成功，或者在失败时变为`error`表示请求失败：
+
+```ts
+const { status } = useFetch('ok')
+
+// Equal to `onSuccess` hook:
+watch(status, (v) => {
+  if (v !== 'success')
+    return
+
+  onSuccess()
+})
+```
+
 ### 轮询
 
 通过 `pollingInterval` 选项以进行轮询请求：
@@ -184,36 +214,6 @@ execute()
 // after about 2 seconds
 await execute()
 // request to => 'ok'
-```
-
-### 依赖刷新
-
-`watch` 选项接受与 Vue 的 `watch` 第一个参数相同的值。在这些响应式变量发生改变时，将会自动发出请求：
-
-```ts
-const dep = ref('foo')
-useFetch('ok', {
-  watch: [dep]
-})
-// request to => 'ok'
-dep.value = 'bar'
-// request to => 'ok'
-```
-
-### 基于响应式变量的钩子
-
-useFetch的返回值 `status` 表示了当前状态，通过对status的监听，你可以实现在不同情况下的回调。status 在最初总是`idle`表示空闲，在请求发出前变为`pending`表示等待响应，请求成功后变为`success`表示成功，或者在失败时变为`error`表示请求失败：
-
-```ts
-const { status } = useFetch('ok')
-
-// Equal to `onSuccess` hook:
-watch(status, (v) => {
-  if (v !== 'success')
-    return
-
-  onSuccess()
-})
 ```
 
 ## 重导出 ofetch
