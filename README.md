@@ -67,13 +67,13 @@ The second parameter accepts a series of configuration options, including all th
 
 ```ts
 useFetch('/return-ok', {
-  async onRequest(ctx) {
-    ctx.options.headers ??= new Headers()
-    const headers = ctx.options.headers
-    if (headers instanceof Headers) {
-      await sleep(10) // mock request
-      headers.append('token', 'my-auth-token')
-    }
+  // Interceptors
+  async onRequest({ options }) {
+    if (!(options.headers instanceof Headers))
+      options.headers = new Headers(options.headers)
+
+    await sleep(10) // mock request
+    headers.append('token', 'my-auth-token')
   },
   onResponse(ctx) {
     console.log(ctx.response._data)
@@ -198,6 +198,22 @@ useFetch('ok', {
 // request to => 'ok'
 dep.value = 'bar'
 // request to => 'ok'
+```
+
+### 基于响应式变量的钩子
+
+The `status` returned by useFetch shows the current status. By watching `status`, you can achieve callbacks for different statuses. `status` is always `idle` in the beginning to indicate idle, becomes `pending` before sending a request, becomes `success` after a successful request, or becomes `error` when the request fails.
+
+```ts
+const { status } = useFetch('ok')
+
+// Equal to `onSuccess` hook:
+watch(status, (v) => {
+  if (v !== 'success')
+    return
+
+  onSuccess()
+})
 ```
 
 ## Re-export ofetch

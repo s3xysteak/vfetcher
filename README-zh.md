@@ -67,13 +67,13 @@ query.value = { two: '2' }
 
 ```ts
 useFetch('/return-ok', {
-  async onRequest(ctx) {
-    ctx.options.headers ??= new Headers()
-    const headers = ctx.options.headers
-    if (headers instanceof Headers) {
-      await sleep(10) // mock request
-      headers.append('token', 'my-auth-token')
-    }
+  // Interceptors
+  async onRequest({ options }) {
+    if (!(options.headers instanceof Headers))
+      options.headers = new Headers(options.headers)
+
+    await sleep(10) // mock request
+    headers.append('token', 'my-auth-token')
   },
   onResponse(ctx) {
     console.log(ctx.response._data)
@@ -198,6 +198,22 @@ useFetch('ok', {
 // request to => 'ok'
 dep.value = 'bar'
 // request to => 'ok'
+```
+
+### 基于响应式变量的钩子
+
+useFetch的返回值 `status` 表示了当前状态，通过对status的监听，你可以实现在不同情况下的回调。status 在最初总是`idle`表示空闲，在请求发出前变为`pending`表示等待响应，请求成功后变为`success`表示成功，或者在失败时变为`error`表示请求失败：
+
+```ts
+const { status } = useFetch('ok')
+
+// Equal to `onSuccess` hook:
+watch(status, (v) => {
+  if (v !== 'success')
+    return
+
+  onSuccess()
+})
 ```
 
 ## 重导出 ofetch
