@@ -40,11 +40,11 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
       onRequest(context) {
         useFetchDefaultOptions.onRequest?.(context)
 
-        const assignPaginationKey = (p: Record<string, any> = {}) =>
-          Object.assign(p, {
-            [pageCurrentKey]: p[pageCurrentKey] || toValue(pageCurrent),
-            [pageSizeKey]: p[pageSizeKey] || toValue(pageSize),
-          })
+        const assignPaginationKey = (p: Record<string, any> = {}) => ({
+          ...p,
+          [pageCurrentKey]: p[pageCurrentKey] || toValue(pageCurrent),
+          [pageSizeKey]: p[pageSizeKey] || toValue(pageSize),
+        })
 
         context.options.query = assignPaginationKey(context.options.query)
         context.options.params = assignPaginationKey(context.options.params)

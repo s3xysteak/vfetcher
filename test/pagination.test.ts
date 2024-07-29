@@ -48,6 +48,46 @@ createTest(3002, (listener, getURL) => {
     })
   })
 
+  it('page with query', async () => {
+    const { data, pageCurrent, total, pageSize } = usePagination(getURL('getByPage'), {
+      query: { one: '1' },
+    })
+    expect(await next(data)).toEqual({
+      total: 100,
+      pageSize: 10,
+      current: 1,
+      data: Array.from({ length: 10 }, (_, i) => ({
+        id: i + 1,
+        name: `data-${i + 1}`,
+      })),
+    })
+    expect(pageSize.value).toBe(10)
+    expect(total.value).toBe(100)
+
+    pageSize.value = 20
+    expect(await next(data)).toEqual({
+      total: 100,
+      pageSize: 20,
+      current: 1,
+      data: Array.from({ length: 20 }, (_, i) => ({
+        id: i + 1,
+        name: `data-${i + 1}`,
+      })),
+    })
+
+    pageCurrent.value = 2
+
+    expect(await next(data)).toEqual({
+      total: 100,
+      pageSize: 20,
+      current: 2,
+      data: Array.from({ length: 20 }, (_, i) => ({
+        id: i + 21,
+        name: `data-${i + 21}`,
+      })),
+    })
+  })
+
   it('override params', async () => {
     let key: string
     const { data, pageCurrent } = usePagination(getURL('getByPage'), {
