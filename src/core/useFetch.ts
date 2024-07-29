@@ -43,16 +43,23 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
         ...Object.fromEntries(
           Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
         ),
-        onResponse(content) {
-          status.value = 'success'
-
+        onRequest(content) {
           ctx.resolveBody(content)
-
-          ctx.options$fetch?.onResponse?.(content)
+          ctx.options$fetch?.onRequest?.(content)
         },
         onRequestError(content) {
           status.value = 'error'
           error.value = content.error
+          ctx.options$fetch?.onRequestError?.(content)
+        },
+        onResponse(content) {
+          status.value = 'success'
+
+          ctx.options$fetch?.onResponse?.(content)
+        },
+        onResponseError(content) {
+          status.value = 'error'
+          error.value = content.error ?? null
           ctx.options$fetch?.onResponseError?.(content as any)
         },
       })

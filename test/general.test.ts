@@ -5,6 +5,26 @@ import { defaultOptionsKey } from '../src/core/useFetch'
 import { createTest, next, sleep } from '.'
 
 createTest(3001, (listener, getURL) => {
+  it('get', async () => {
+    const { data } = useFetch(getURL('ok'))
+    expect(await next(data)).toBe('ok')
+  })
+
+  it('post', async () => {
+    const { data } = useFetch(getURL('post'), { method: 'post', body: { one: 1 } })
+    expect(await next(data)).toEqual({ one: 1 })
+  })
+
+  it('post-x-www-form', async () => {
+    const { data } = useFetch(getURL('post'), {
+      method: 'post',
+      body: { one: '1' },
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    })
+
+    expect(await next(data)).toEqual({ one: '1' })
+  })
+
   it('watch', async () => {
     const url = ref('ok')
 
