@@ -9,7 +9,7 @@ import type {
   UsePaginationReturns,
 } from './types'
 import { objectGet, toArray } from './utils/general'
-import { useFetchDefaultOptionsKey } from './useFetch'
+import { defaultOptionsKey } from './useFetch'
 
 export function createUsePagination(defaultOptions: UsePaginationOptions<any> = {}) {
   const usePagination: UsePagination = function <T = any, R extends ResponseType = ResponseType>(
@@ -32,7 +32,7 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
     const pageCurrent = ref<number>(1)
 
     // @ts-expect-error - for internal use
-    const useFetchDefaultOptions: UseFetchOptions = useFetch[useFetchDefaultOptionsKey]
+    const useFetchDefaultOptions: UseFetchOptions = useFetch[defaultOptionsKey]
 
     const val = useFetch(_req, {
       ...useFetchOptions,
@@ -79,6 +79,9 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
   }
 
   usePagination.create = newDefaultOptions => createUsePagination({ ...defaultOptions, ...newDefaultOptions })
+
+  // @ts-expect-error - for internal use
+  usePagination[defaultOptionsKey] = { ...defaultOptions }
 
   return usePagination
 }

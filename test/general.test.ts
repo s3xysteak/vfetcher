@@ -1,7 +1,7 @@
 import { computed, effectScope, ref } from 'vue'
 import { expect, it } from 'vitest'
-import { $fetch } from 'ofetch'
 import { useFetch } from '../src'
+import { defaultOptionsKey } from '../src/core/useFetch'
 import { createTest, next, sleep } from '.'
 
 createTest(3001, (listener, getURL) => {
@@ -87,7 +87,6 @@ createTest(3001, (listener, getURL) => {
     expect(times.value).toBe(1)
     execute()
     execute()
-    execute()
 
     await sleep(150)
     await execute()
@@ -105,6 +104,11 @@ createTest(3001, (listener, getURL) => {
     const { data: d2, execute: e2 } = $2('ok')
     await e2()
     expect(d2.value).toBe('ok')
+
+    expect($2[defaultOptionsKey]).toEqual({
+      immediate: false,
+      baseURL: listener.value.url,
+    })
   })
 
   it('customize ofetch', async () => {

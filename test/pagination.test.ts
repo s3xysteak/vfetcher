@@ -1,8 +1,8 @@
-import { computed, effectScope, ref, watchEffect } from 'vue'
 import { expect, it } from 'vitest'
 import { getQuery } from 'ufo'
-import { useFetch, usePagination } from '../src'
-import { createTest, next, sleep } from '.'
+import { usePagination } from '../src'
+import { defaultOptionsKey } from '../src/core/useFetch'
+import { createTest, next } from '.'
 
 createTest(3002, (listener, getURL) => {
   it('basic', async () => {
@@ -81,5 +81,17 @@ createTest(3002, (listener, getURL) => {
     pageCurrent.value = 2
     await next(data)
     expect(key!).toBe('2')
+
+    const $1 = usePagination.create({
+      immediate: false,
+    })
+    const $2 = $1.create({
+      baseURL: listener.value.url,
+    })
+
+    expect($2[defaultOptionsKey]).toEqual({
+      immediate: false,
+      baseURL: listener.value.url,
+    })
   })
 })
