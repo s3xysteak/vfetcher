@@ -38,31 +38,29 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       status.value = 'pending'
       pending.value = true
 
-      data.value = await $fetch<T, R>(toValue(req), {
-        ...ctx.options$fetch,
-        ...Object.fromEntries(
-          Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
-        ),
-        onRequest(content) {
-          ctx.resolveBody(content)
-          ctx.options$fetch?.onRequest?.(content)
-        },
-        onRequestError(content) {
-          status.value = 'error'
-          error.value = content.error
-          ctx.options$fetch?.onRequestError?.(content)
-        },
-        onResponse(content) {
-          status.value = 'success'
+      try {
+        data.value = await $fetch<T, R>(toValue(req), {
+          ...ctx.options$fetch,
+          ...Object.fromEntries(
+            Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
+          ),
+          onRequest(content) {
+            ctx.resolveBody(content)
+            ctx.options$fetch?.onRequest?.(content)
+          },
+          onRequestError(content) {
+            status.value = 'error'
+            error.value = content.error
+            ctx.options$fetch?.onRequestError?.(content)
+          },
+        })
 
-          ctx.options$fetch?.onResponse?.(content)
-        },
-        onResponseError(content) {
-          status.value = 'error'
-          error.value = content.error ?? null
-          ctx.options$fetch?.onResponseError?.(content as any)
-        },
-      })
+        status.value = 'success'
+      }
+      catch (_error) {
+        status.value = 'error'
+        error.value = (_error as any) ?? null
+      }
 
       pending.value = false
     }
