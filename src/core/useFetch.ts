@@ -35,34 +35,40 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     const watchOptions = reactive(ctx.optionsWatch)
 
     const execute = async () => {
-      status.value = 'pending'
-      pending.value = true
+      await $fetch<T, R>(toValue(req), {
+        ...ctx.options$fetch,
+        ...Object.fromEntries(
+          Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
+        ),
+        onRequest(content) {
+          status.value = 'pending'
+          pending.value = true
 
-      try {
-        data.value = await $fetch<T, R>(toValue(req), {
-          ...ctx.options$fetch,
-          ...Object.fromEntries(
-            Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
-          ),
-          onRequest(content) {
-            ctx.resolveBody(content)
-            ctx.options$fetch?.onRequest?.(content)
-          },
-          onRequestError(content) {
-            status.value = 'error'
-            error.value = content.error
-            ctx.options$fetch?.onRequestError?.(content)
-          },
-        })
+          ctx.resolveBody(content)
 
-        status.value = 'success'
-      }
-      catch (_error) {
-        status.value = 'error'
-        error.value = (_error as any) ?? null
-      }
+          ctx.options$fetch?.onRequest?.(content)
+        },
+        onRequestError(content) {
+          status.value = 'error'
+          error.value = content.error
 
-      pending.value = false
+          ctx.options$fetch?.onRequestError?.(content)
+        },
+        onResponse(content) {
+          data.value = content.response._data
+          status.value = 'success'
+          pending.value = false
+
+          ctx.options$fetch?.onResponse?.(content)
+        },
+        onResponseError(content) {
+          error.value = content.error ?? new Error('[useFetch] Unknown error caught in onResponseError')
+          status.value = 'error'
+          pending.value = false
+
+          ctx.options$fetch?.onResponseError?.(content as any)
+        },
+      })
     }
 
     const _debounce_execute = ctx.optionsComposable.debounceInterval !== undefined

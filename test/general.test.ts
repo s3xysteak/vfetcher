@@ -1,4 +1,4 @@
-import { computed, effectScope, ref } from 'vue'
+import { computed, effectScope, ref, watch } from 'vue'
 import { expect, it } from 'vitest'
 import { useFetch } from '../src'
 import { defaultOptionsKey } from '../src/core/useFetch'
@@ -61,6 +61,21 @@ createTest(3001, (listener, getURL) => {
 
     source.value = true
     expect(await next(times)).toBe(1)
+  })
+
+  it('status', async () => {
+    const { status, data } = useFetch(getURL('ok'))
+
+    const target = ref('')
+
+    watch(status, (val) => {
+      if (val !== 'success')
+        return
+
+      target.value = data.value
+    })
+
+    expect(await next(target)).toBe('ok')
   })
 
   it('polling', async () => {
