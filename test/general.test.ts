@@ -18,7 +18,7 @@ createTest(3001, (listener, getURL) => {
   it('post-x-www-form', async () => {
     const { data } = useFetch(getURL('post'), {
       method: 'post',
-      body: { one: '1' },
+      body: new URLSearchParams({ one: '1' }),
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
     })
 

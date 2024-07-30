@@ -44,8 +44,6 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
           status.value = 'pending'
           pending.value = true
 
-          ctx.resolveBody(content)
-
           ctx.options$fetch?.onRequest?.(content)
         },
         onRequestError(content) {
