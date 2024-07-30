@@ -149,6 +149,23 @@ dep.value = 'bar'
 // request to => 'ok'
 ```
 
+### Conditional Requests
+
+`ready` accept a boolean reactive variable or a function returned boolean. Only request while the result is true. When the result is false, execute will be ended up immediately and no request will be send. It is useful when you are using dependency refresh and have requirements for request conditions.
+
+```ts
+const ready = ref(false)
+const { execute } = useFetch('ok', {
+  immediate: false,
+  ready
+})
+await execute()
+// the promise will be resolved immediately and no request will be send
+ready.value = true
+await execute()
+// request to => 'ok'
+```
+
 ### Hooks based on reactive variables
 
 The `status` returned by useFetch shows the current status. By watching `status`, you can achieve callbacks for different statuses. `status` is always `idle` in the beginning to indicate idle, becomes `pending` before sending a request, becomes `success` after a successful request, or becomes `error` when the request fails.

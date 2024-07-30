@@ -38,6 +38,9 @@ export interface UseFetchOptions<R extends ResponseType = ResponseType> extends 
 
   /** Indicate the throttle wait time in millisecond */
   throttleInterval?: MaybeRefOrGetter<number>
+
+  /** Only request if true. Request will be prevented if false. */
+  ready?: MaybeRefOrGetter<boolean>
 }
 
 export interface UseFetchReturns<R extends ResponseType = ResponseType, T = any> {

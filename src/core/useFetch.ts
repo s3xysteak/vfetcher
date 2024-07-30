@@ -67,27 +67,29 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       pending.value = false
     }
 
-    const _execute = ctx.optionsComposable.debounceInterval !== undefined
+    const _debounce_execute = ctx.optionsComposable.debounceInterval !== undefined
       ? useDebounceFn(execute, ctx.optionsComposable.debounceInterval)
       : execute
-    const $execute = ctx.optionsComposable.throttleInterval !== undefined
-      ? useThrottleFn(_execute, ctx.optionsComposable.throttleInterval)
-      : _execute
+    const _throttle_execute = ctx.optionsComposable.throttleInterval !== undefined
+      ? useThrottleFn(_debounce_execute, ctx.optionsComposable.throttleInterval)
+      : _debounce_execute
+
+    const _execute = () => toValue(ctx.optionsComposable.ready) ? _throttle_execute() : new Promise<void>(res => res())
 
     const pollingInterval = ctx.optionsComposable.pollingInterval
     if (pollingInterval !== undefined)
-      useTimeoutPoll($execute, pollingInterval, { immediate: ctx.optionsComposable.immediate })
+      useTimeoutPoll(_execute, pollingInterval, { immediate: ctx.optionsComposable.immediate })
 
     if (ctx.optionsComposable.immediate
       && pollingInterval === undefined) {
-      $execute()
+      _execute()
     }
 
     watch(
       ctx.optionsComposable.watch === false
         ? []
         : [req, watchOptions, ...toArray(ctx.optionsComposable.watch || [])],
-      () => $execute(),
+      () => _execute(),
     )
 
     return {
@@ -95,8 +97,8 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       pending,
       status,
       error,
-      execute: $execute,
-      refresh: $execute,
+      execute: _execute,
+      refresh: _execute,
     }
   }
 

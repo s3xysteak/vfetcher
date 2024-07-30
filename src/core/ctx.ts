@@ -16,6 +16,7 @@ function resolveOptions<R extends ResponseType>(options: UseFetchOptions<R>) {
     pollingInterval,
     debounceInterval,
     throttleInterval,
+    ready = true,
 
     cache,
     credentials,
@@ -51,6 +52,7 @@ function resolveOptions<R extends ResponseType>(options: UseFetchOptions<R>) {
       pollingInterval,
       debounceInterval,
       throttleInterval,
+      ready,
     },
     optionsWatch,
     options$fetch: {

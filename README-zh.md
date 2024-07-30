@@ -149,6 +149,23 @@ dep.value = 'bar'
 // request to => 'ok'
 ```
 
+### 条件请求
+
+`ready` 选项接受响应式布尔值，或是返回布尔值的函数。只有在结果为true时发出请求，结果为false时立即结束execute且不发出请求。这在使用依赖请求、又对请求条件有要求时很有用：
+
+```ts
+const ready = ref(false)
+const { execute } = useFetch('ok', {
+  immediate: false,
+  ready
+})
+await execute()
+// the promise will be resolved immediately and no request will be send
+ready.value = true
+await execute()
+// request to => 'ok'
+```
+
 ### 基于响应式变量的钩子
 
 useFetch的返回值 `status` 表示了当前状态，通过对status的监听，你可以实现在不同情况下的回调。status 在最初总是`idle`表示空闲，在请求发出前变为`pending`表示等待响应，请求成功后变为`success`表示成功，或者在失败时变为`error`表示请求失败：

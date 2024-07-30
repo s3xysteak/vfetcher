@@ -25,6 +25,20 @@ createTest(3001, (listener, getURL) => {
     expect(await next(data)).toEqual({ one: '1' })
   })
 
+  it('ready', async () => {
+    const ready = ref(false)
+    const { data, execute } = useFetch(getURL('ok'), {
+      immediate: false,
+      ready,
+    })
+    await execute()
+    expect(data.value).toBeNull()
+
+    ready.value = true
+    await execute()
+    expect(data.value).toBe('ok')
+  })
+
   it('watch', async () => {
     const url = ref('ok')
 
