@@ -15,6 +15,8 @@ $ pnpm i vfetcher
 
 ## Usage
 
+> Visit [examples](/examples/src/) to see the config examples, visit [test](/test/) to see the usage examples.
+
 ### Basic example
 
 By default, useFetch will automatically make a request during initialization:

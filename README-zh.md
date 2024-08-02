@@ -15,6 +15,8 @@ $ pnpm i vfetcher
 
 ## 使用
 
+> 访问 [examples](/examples/src/) 以查看配置示例，访问 [test](/test/) 以查看使用示例。
+
 ### 基本示例
 
 useFetch默认情况下会在初始化时自动发出请求：
