@@ -16,11 +16,11 @@ export interface UseFetchReactiveOptions {
 }
 
 export interface UseFetch {
-  <T = any, R extends ResponseType = ResponseType>(
+  <T = any, R extends ResponseType = 'json'>(
     _req: UseFetchParams,
     options?: UseFetchOptions<R>,
   ): UseFetchReturns<R, T>
-  create: <R extends ResponseType = ResponseType>(options?: UseFetchOptions<R>) => UseFetch
+  create: (options?: UseFetchOptions) => UseFetch
 }
 
 export interface UseFetchOptions<R extends ResponseType = ResponseType> extends UseFetchReactiveOptions, Omit<FetchOptions<R>, keyof UseFetchReactiveOptions> {
@@ -77,11 +77,11 @@ export interface ResponseMap {
 export type ResponseType = keyof ResponseMap | 'json'
 
 export interface UsePagination {
-  <T = any, R extends ResponseType = ResponseType>(
+  <T = any, R extends ResponseType = 'json'>(
     _req: UseFetchParams,
     options?: UsePaginationOptions<R>,
   ): UsePaginationReturns<R, T>
-  create: <R extends ResponseType = ResponseType>(options?: UsePaginationOptions<R>) => UsePagination
+  create: (options?: UsePaginationOptions) => UsePagination
 }
 
 export interface UsePaginationOptions<R extends ResponseType = ResponseType> extends UseFetchOptions<R> {
