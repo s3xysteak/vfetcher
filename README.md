@@ -204,7 +204,7 @@ Debounce by using the `debounceInterval` option:
 
 ```ts
 const { execute } = useFetch('ok', {
-  pollingInterval: 2000 // 2 seconds
+  debounceInterval: 2000 // 2 seconds
 })
 
 await execute()
