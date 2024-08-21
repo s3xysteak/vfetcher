@@ -35,38 +35,30 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     const watchOptions = reactive(ctx.optionsWatch)
 
     const execute = async () => {
-      await $fetch<T, R>(toValue(req), {
-        ...ctx.options$fetch,
-        ...Object.fromEntries(
-          Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
-        ),
-        onRequest(content) {
-          status.value = 'pending'
-          pending.value = true
+      try {
+        // on request
+        status.value = 'pending'
+        pending.value = true
 
-          ctx.options$fetch?.onRequest?.(content)
-        },
-        onRequestError(content) {
-          status.value = 'error'
-          error.value = content.error
+        data.value = await $fetch<T, R>(toValue(req), {
+          ...ctx.options$fetch,
+          ...Object.fromEntries(
+            Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
+          ),
+        })
 
-          ctx.options$fetch?.onRequestError?.(content)
-        },
-        onResponse(content) {
-          data.value = content.response._data
-          status.value = 'success'
-          pending.value = false
+        // on response
+        status.value = 'success'
+        pending.value = false
+      }
+      catch (e) {
+        // on error
+        error.value = e instanceof Error ? e : new Error(e as any)
+        status.value = 'error'
+        pending.value = false
 
-          ctx.options$fetch?.onResponse?.(content)
-        },
-        onResponseError(content) {
-          error.value = content.error ?? new Error('[useFetch] Unknown error caught in onResponseError')
-          status.value = 'error'
-          pending.value = false
-
-          ctx.options$fetch?.onResponseError?.(content as any)
-        },
-      })
+        throw error.value
+      }
     }
 
     const _debounce_execute = ctx.optionsComposable.debounceInterval !== undefined

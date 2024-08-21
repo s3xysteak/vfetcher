@@ -172,4 +172,26 @@ createTest(3001, (listener, getURL) => {
 
     expect(data.value).toEqual({ one: '1' })
   })
+
+  it('test error', async () => {
+    const { execute, error } = useFetch(getURL('404'), {
+      immediate: false,
+    })
+
+    await expect(() => execute()).rejects.toThrowError()
+    expect(error.value?.message.includes('404')).toBeTruthy()
+  })
+
+  it('try catch', async () => {
+    const { execute, error } = useFetch(getURL('404'), {
+      immediate: false,
+    })
+
+    try {
+      await execute()
+    }
+    catch (e) {
+      expect(error.value).toEqual(e)
+    }
+  })
 })
