@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { isRef, toValue } from 'vue'
-import type { EventFilter, FunctionArgs } from './general'
-import { createFilterWrapper, noop } from './general'
+import { type EventFilter, type FunctionArgs, createFilterWrapper } from './vueuseVender'
+import { noop } from './general'
 import type { AnyFn, PromisifyFn } from './types'
 
 /**

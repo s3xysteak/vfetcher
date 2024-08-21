@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import type { UseTimeoutFnOptions } from './useTimeoutFn'
 import { useTimeoutFn } from './useTimeoutFn'
-import { tryOnScopeDispose } from './general'
+import { tryOnScopeDispose } from './vueuseVender'
 import type { Fn } from './types'
 
 /** @vueuse/core useTimeoutPoll */
