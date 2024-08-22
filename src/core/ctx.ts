@@ -1,11 +1,7 @@
 import type { ResponseType, UseFetchOptions } from './types'
 
-export function createContext<R extends ResponseType>(userOptions: UseFetchOptions<R>) {
-  const options = resolveOptions<R>(userOptions)
-
-  return {
-    ...options,
-  }
+export function createContext<R extends ResponseType = ResponseType>(userOptions: UseFetchOptions<R>) {
+  return resolveOptions<R>({ ...userOptions })
 }
 
 function resolveOptions<R extends ResponseType>(options: UseFetchOptions<R>) {

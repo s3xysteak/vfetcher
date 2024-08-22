@@ -1,6 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, reactive, ref, shallowRef, toValue, watch } from 'vue'
-import { $fetch, type MappedResponseType } from 'ofetch'
+import { ref, shallowRef, toValue, watch } from 'vue'
 import { createContext } from './ctx'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 import { useDebounceFn } from './utils/useDebounceFn'
@@ -8,31 +7,24 @@ import { useThrottleFn } from './utils/useThrottleFn'
 import { toArray } from './utils/general'
 
 import type {
-  ResponseType,
+  UseAsyncData,
+  UseAsyncDataOptions,
+  UseAsyncDataReturns,
   UseAsyncDataStatus,
-  UseFetch,
-  UseFetchOptions,
-  UseFetchParams,
-  UseFetchReturns,
 } from './types'
 
-export const defaultOptionsKey = Symbol('defaultOptionsKey')
-
-export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
-  const useFetch: UseFetch = function <T = any, R extends ResponseType = ResponseType>(
-    _req: UseFetchParams,
-    options: UseFetchOptions<R> = {},
-  ): UseFetchReturns<R, T> {
-    const ctx = createContext({ ...options, ...defaultOptions })
+export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
+  const useAsyncData: UseAsyncData = function <T = any>(
+    request: () => Promise<T>,
+    options: UseAsyncDataOptions = {},
+  ): UseAsyncDataReturns<T> {
+    const ctx: { optionsComposable: ReturnType<typeof createContext>['optionsComposable'] }
+    = createContext({ ...options, ...defaultOptions })
 
     const status = ref<UseAsyncDataStatus>('idle')
     const pending = ref(false)
-    const data: Ref<MappedResponseType<R, T> | null> = shallowRef(null)
+    const data: Ref<T | null> = shallowRef(null)
     const error = ref<Error | null>(null)
-
-    const req = computed(() => toValue(_req))
-
-    const watchOptions = reactive(ctx.optionsWatch)
 
     const execute = async () => {
       try {
@@ -40,12 +32,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
         status.value = 'pending'
         pending.value = true
 
-        data.value = await $fetch<T, R>(toValue(req), {
-          ...ctx.options$fetch,
-          ...Object.fromEntries(
-            Object.entries(toValue(watchOptions)).map(([k, v]) => [k, toValue(v)]),
-          ),
-        })
+        data.value = await request()
 
         // on response
         status.value = 'success'
@@ -68,7 +55,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
       ? useThrottleFn(_debounce_execute, ctx.optionsComposable.throttleInterval)
       : _debounce_execute
 
-    const _execute = () => toValue(ctx.optionsComposable.ready) ? _throttle_execute() : new Promise<void>(res => res())
+    const _execute = () => toValue(ctx.optionsComposable.ready) ? _throttle_execute() : Promise.resolve()
 
     const pollingInterval = ctx.optionsComposable.pollingInterval
     if (pollingInterval !== undefined)
@@ -82,7 +69,7 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     watch(
       ctx.optionsComposable.watch === false
         ? []
-        : [req, watchOptions, ...toArray(ctx.optionsComposable.watch || [])],
+        : [...toArray(ctx.optionsComposable.watch || [])],
       () => _execute(),
     )
 
@@ -96,11 +83,11 @@ export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
     }
   }
 
-  useFetch.create = newDefaultOptions =>
-    createUseFetch({ ...defaultOptions, ...newDefaultOptions })
+  useAsyncData.create = newDefaultOptions =>
+    createUseAsyncData({ ...defaultOptions, ...newDefaultOptions })
 
   // @ts-expect-error - for internal use
-  useFetch[defaultOptionsKey] = { ...defaultOptions }
+  useAsyncData[defaultOptionsKey] = { ...defaultOptions }
 
-  return useFetch
+  return useAsyncData
 }
