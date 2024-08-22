@@ -86,8 +86,5 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
   useAsyncData.create = newDefaultOptions =>
     createUseAsyncData({ ...defaultOptions, ...newDefaultOptions })
 
-  // @ts-expect-error - for internal use
-  useAsyncData[defaultOptionsKey] = { ...defaultOptions }
-
   return useAsyncData
 }

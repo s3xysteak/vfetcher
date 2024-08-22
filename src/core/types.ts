@@ -1,6 +1,5 @@
 import type { FetchOptions, MappedResponseType } from 'ofetch'
 import type { ComputedRef, MaybeRefOrGetter, Ref, WatchSource } from 'vue'
-import type { Arrayable } from './utils/types'
 
 export type UseAsyncDataStatus = 'idle' | 'pending' | 'success' | 'error'
 
@@ -27,7 +26,7 @@ export interface UseAsyncDataOptions {
   immediate?: boolean
 
   /** Same as Vue's `watch`. Refresh when watch source updated */
-  watch?: Arrayable<WatchSource> | false
+  watch?: MultiWatchSource | MultiWatchSource[] | false
 
   /** Indicate the interval time for polling in millisecond */
   pollingInterval?: MaybeRefOrGetter<number>
@@ -123,3 +122,5 @@ export interface UsePaginationReturns<R extends ResponseType = ResponseType, T =
   /** Readonly number to indicate how many pages here */
   pageTotal: ComputedRef<number>
 }
+
+export type MultiWatchSource = WatchSource<unknown> | object
