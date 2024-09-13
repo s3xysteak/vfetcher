@@ -26,7 +26,7 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
     const data: Ref<T | null> = shallowRef(null)
     const error = ref<Error | null>(null)
 
-    const execute = async () => {
+    const executeRequest = async () => {
       try {
         // on request
         status.value = 'pending'
@@ -36,41 +36,43 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
 
         // on response
         status.value = 'success'
-        pending.value = false
       }
       catch (e) {
         // on error
         error.value = e instanceof Error ? e : new Error(e as any)
         status.value = 'error'
-        pending.value = false
 
         throw error.value
       }
+      finally {
+        // on finally
+        pending.value = false
+      }
     }
 
-    const _debounce_execute = ctx.optionsComposable.debounceInterval !== undefined
-      ? useDebounceFn(execute, ctx.optionsComposable.debounceInterval)
-      : execute
-    const _throttle_execute = ctx.optionsComposable.throttleInterval !== undefined
-      ? useThrottleFn(_debounce_execute, ctx.optionsComposable.throttleInterval)
-      : _debounce_execute
+    const debounceExecute = ctx.optionsComposable.debounceInterval !== undefined
+      ? useDebounceFn(executeRequest, ctx.optionsComposable.debounceInterval)
+      : executeRequest
+    const throttleExecute = ctx.optionsComposable.throttleInterval !== undefined
+      ? useThrottleFn(debounceExecute, ctx.optionsComposable.throttleInterval)
+      : debounceExecute
 
-    const _execute = () => toValue(ctx.optionsComposable.ready) ? _throttle_execute() : Promise.resolve()
+    const execute = () => toValue(ctx.optionsComposable.ready) ? throttleExecute() : Promise.resolve()
 
     const pollingInterval = ctx.optionsComposable.pollingInterval
     if (pollingInterval !== undefined)
-      useTimeoutPoll(_execute, pollingInterval, { immediate: ctx.optionsComposable.immediate })
+      useTimeoutPoll(execute, pollingInterval, { immediate: ctx.optionsComposable.immediate })
 
     if (ctx.optionsComposable.immediate
       && pollingInterval === undefined) {
-      _execute()
+      execute()
     }
 
     watch(
       ctx.optionsComposable.watch === false
         ? []
         : [...toArray(ctx.optionsComposable.watch || [])],
-      () => _execute(),
+      () => execute(),
     )
 
     return {
@@ -78,8 +80,8 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
       pending,
       status,
       error,
-      execute: _execute,
-      refresh: _execute,
+      execute,
+      refresh: execute,
     }
   }
 
