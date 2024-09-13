@@ -4,7 +4,7 @@ import { createTest, next, sleep } from '.'
 import { useFetch } from '../src'
 import { defaultOptionsKey } from '../src/core/useFetch'
 
-createTest(3001, (listener, getURL) => {
+createTest(3001, 'useFetch', (listener, getURL) => {
   it('get', async () => {
     const { data } = useFetch(getURL('ok'))
     expect(await next(data)).toBe('ok')

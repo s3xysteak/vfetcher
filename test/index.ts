@@ -17,7 +17,7 @@ type CreateTestCallback = (
   getURL: (url: string) => string
 ) => void
 
-export function createTest(port: number, fn: CreateTestCallback, sync = false) {
+export function createTest(port: number, name: string, fn: CreateTestCallback, sync = false) {
   const run = () => {
     const listener = shallowRef<Listener>()
     const getURL = (url: string) => joinURL(listener.value!.url, url)
@@ -34,9 +34,9 @@ export function createTest(port: number, fn: CreateTestCallback, sync = false) {
     fn(listener as ShallowRef<Listener>, getURL)
   }
   if (sync)
-    describe('vfetcher', run)
+    describe(name, run)
 
-  describe.concurrent('vfetcher', run)
+  describe.concurrent(name, run)
 }
 
 function beforeAllCreateApp() {

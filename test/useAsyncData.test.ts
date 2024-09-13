@@ -4,7 +4,7 @@ import { effectScope, ref, watch } from 'vue'
 import { createTest, next, sleep } from '.'
 import { useAsyncData } from '../src'
 
-createTest(3004, (_, getURL) => {
+createTest(3004, 'useAsyncData', (_, getURL) => {
   it('get', async () => {
     const { data } = useAsyncData(() => $fetch(getURL('ok')))
     expect(await next(data)).toBe('ok')

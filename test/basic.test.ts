@@ -3,7 +3,7 @@ import { expect, it } from 'vitest'
 import { createTest, next, sleep } from '.'
 import { useFetch } from '../src'
 
-createTest(3000, (listener, getURL) => {
+createTest(3000, 'basic', (listener, getURL) => {
   it('$fetch', async () => {
     expect(await $fetch(getURL('ok'))).toBe('ok')
     expect(await $fetch(getURL('params'), { query: { one: '1' } })).toEqual({ one: '1' })

@@ -4,7 +4,7 @@ import { createTest, next } from '.'
 import { usePagination } from '../src'
 import { defaultOptionsKey } from '../src/core/useFetch'
 
-createTest(3002, (listener, getURL) => {
+createTest(3002, 'usePagination', (listener, getURL) => {
   it('basic', async () => {
     const { data } = usePagination(getURL('ok'))
     expect(await next(data)).toBe('ok')

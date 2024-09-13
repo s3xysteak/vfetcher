@@ -2,7 +2,7 @@ import { expectTypeOf, it } from 'vitest'
 import { createTest } from '.'
 import { useFetch as $fetch, usePagination } from '../src'
 
-createTest(3003, (_, getURL) => {
+createTest(3003, 'types', (_, getURL) => {
   const useFetch = $fetch.create({ immediate: false })
 
   it('useFetch', async () => {
