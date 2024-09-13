@@ -17,7 +17,7 @@ export function objectGet(source: Record<string, any>, path: string, defaultValu
   const paths = path.replace(/\[(\d+)\]/g, '.$1').split('.')
   let result = source
   for (const p of paths) {
-    result = Object(result)[p]
+    result = new Object(result)[p]
     if (result === undefined) {
       return defaultValue
     }

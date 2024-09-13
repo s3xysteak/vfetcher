@@ -1,8 +1,8 @@
 import { $fetch } from 'ofetch'
-import { effectScope, ref, watch } from 'vue'
 import { expect, it } from 'vitest'
-import { useAsyncData } from '../src'
+import { effectScope, ref, watch } from 'vue'
 import { createTest, next, sleep } from '.'
+import { useAsyncData } from '../src'
 
 createTest(3004, (_, getURL) => {
   it('get', async () => {

@@ -1,6 +1,6 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
-import { readonly, ref, toValue } from 'vue'
 import type { AnyFn, Fn } from './types'
+import { readonly, ref, toValue } from 'vue'
 import { tryOnScopeDispose } from './vueuseVender'
 
 export interface UseTimeoutFnOptions {

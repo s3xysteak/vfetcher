@@ -1,8 +1,8 @@
-import { computed, effectScope, ref, watch } from 'vue'
 import { expect, it } from 'vitest'
+import { computed, effectScope, ref, watch } from 'vue'
+import { createTest, next, sleep } from '.'
 import { useFetch } from '../src'
 import { defaultOptionsKey } from '../src/core/useFetch'
-import { createTest, next, sleep } from '.'
 
 createTest(3001, (listener, getURL) => {
   it('get', async () => {

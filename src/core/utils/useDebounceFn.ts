@@ -1,7 +1,7 @@
-import { type MaybeRefOrGetter, toValue } from 'vue'
 import type { AnyFn, PromisifyFn } from './types'
-import { type EventFilter, type FunctionArgs, createFilterWrapper } from './vueuseVender'
+import { type MaybeRefOrGetter, toValue } from 'vue'
 import { noop } from './general'
+import { createFilterWrapper, type EventFilter, type FunctionArgs } from './vueuseVender'
 
 /**
  * Debounce execution of a function.

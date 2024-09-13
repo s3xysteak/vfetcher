@@ -1,5 +1,5 @@
-import { $fetch as $f, type FetchOptions } from 'vfetcher/ofetch'
 import { usePagination as $p, useFetch as $u } from 'vfetcher'
+import { $fetch as $f, type FetchOptions } from 'vfetcher/ofetch'
 
 export const $fetch = $f.create(options())
 export const useFetch = $u.create(options())

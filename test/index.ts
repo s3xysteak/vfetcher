@@ -1,13 +1,13 @@
-import { afterAll, beforeAll, describe } from 'vitest'
-import { getQuery, joinURL } from 'ufo'
+import type { ShallowRef } from 'vue'
 import {
   createApp,
   eventHandler,
   readBody,
   toNodeListener,
 } from 'h3'
-import { type Listener, listen } from 'listhen'
-import type { ShallowRef } from 'vue'
+import { listen, type Listener } from 'listhen'
+import { getQuery, joinURL } from 'ufo'
+import { afterAll, beforeAll, describe } from 'vitest'
 import { shallowRef } from 'vue'
 
 export * from './utils'

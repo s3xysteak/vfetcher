@@ -1,7 +1,7 @@
-import { expect, it } from 'vitest'
 import { $fetch } from 'ofetch'
-import { useFetch } from '../src'
+import { expect, it } from 'vitest'
 import { createTest, next, sleep } from '.'
+import { useFetch } from '../src'
 
 createTest(3000, (listener, getURL) => {
   it('$fetch', async () => {

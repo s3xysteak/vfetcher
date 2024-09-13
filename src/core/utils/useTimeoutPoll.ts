@@ -1,10 +1,10 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
-import { ref } from 'vue'
+import type { Fn } from './types'
 
 import type { UseTimeoutFnOptions } from './useTimeoutFn'
+import { ref } from 'vue'
 import { useTimeoutFn } from './useTimeoutFn'
 import { tryOnScopeDispose } from './vueuseVender'
-import type { Fn } from './types'
 
 /** @vueuse/core useTimeoutPoll */
 export function useTimeoutPoll(

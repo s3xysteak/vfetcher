@@ -1,8 +1,8 @@
-import { expect, it } from 'vitest'
 import { getQuery } from 'ufo'
+import { expect, it } from 'vitest'
+import { createTest, next } from '.'
 import { usePagination } from '../src'
 import { defaultOptionsKey } from '../src/core/useFetch'
-import { createTest, next } from '.'
 
 createTest(3002, (listener, getURL) => {
   it('basic', async () => {

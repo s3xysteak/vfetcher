@@ -1,6 +1,6 @@
-import { expect, expectTypeOf, it } from 'vitest'
-import { useFetch as $fetch, usePagination as $pagination, usePagination } from '../src'
+import { expectTypeOf, it } from 'vitest'
 import { createTest } from '.'
+import { useFetch as $fetch, usePagination } from '../src'
 
 createTest(3003, (_, getURL) => {
   const useFetch = $fetch.create({ immediate: false })

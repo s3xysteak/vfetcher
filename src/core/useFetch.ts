@@ -1,9 +1,3 @@
-import { computed, reactive, toValue } from 'vue'
-import { $fetch } from 'ofetch'
-import { useAsyncData } from '..'
-import { createContext } from './ctx'
-import { toArray } from './utils/general'
-
 import type {
   ResponseType,
   UseFetch,
@@ -11,6 +5,12 @@ import type {
   UseFetchParams,
   UseFetchReturns,
 } from './types'
+import { $fetch } from 'ofetch'
+import { computed, reactive, toValue } from 'vue'
+import { useAsyncData } from '..'
+import { createContext } from './ctx'
+
+import { toArray } from './utils/general'
 
 export const defaultOptionsKey = Symbol('defaultOptionsKey')
 

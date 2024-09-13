@@ -1,5 +1,3 @@
-import { computed, ref, toValue } from 'vue'
-import { useFetch } from '..'
 import type {
   ResponseType,
   UseFetchParams,
@@ -7,8 +5,10 @@ import type {
   UsePaginationOptions,
   UsePaginationReturns,
 } from './types'
-import { objectGet, toArray } from './utils/general'
+import { computed, ref, toValue } from 'vue'
+import { useFetch } from '..'
 import { defaultOptionsKey } from './useFetch'
+import { objectGet, toArray } from './utils/general'
 
 export function createUsePagination(defaultOptions: UsePaginationOptions<any> = {}) {
   const usePagination: UsePagination = function <T = any, R extends ResponseType = ResponseType>(

@@ -1,17 +1,17 @@
 import type { Ref } from 'vue'
-import { ref, shallowRef, toValue, watch } from 'vue'
-import { createContext } from './ctx'
-import { useTimeoutPoll } from './utils/useTimeoutPoll'
-import { useDebounceFn } from './utils/useDebounceFn'
-import { useThrottleFn } from './utils/useThrottleFn'
-import { toArray } from './utils/general'
-
 import type {
   UseAsyncData,
   UseAsyncDataOptions,
   UseAsyncDataReturns,
   UseAsyncDataStatus,
 } from './types'
+import { ref, shallowRef, toValue, watch } from 'vue'
+import { createContext } from './ctx'
+import { toArray } from './utils/general'
+import { useDebounceFn } from './utils/useDebounceFn'
+import { useThrottleFn } from './utils/useThrottleFn'
+
+import { useTimeoutPoll } from './utils/useTimeoutPoll'
 
 export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
   const useAsyncData: UseAsyncData = function <T = any>(

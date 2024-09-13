@@ -1,8 +1,8 @@
 import type { MaybeRefOrGetter } from 'vue'
-import { isRef, toValue } from 'vue'
-import { type EventFilter, type FunctionArgs, createFilterWrapper } from './vueuseVender'
-import { noop } from './general'
 import type { AnyFn, PromisifyFn } from './types'
+import { isRef, toValue } from 'vue'
+import { noop } from './general'
+import { createFilterWrapper, type EventFilter, type FunctionArgs } from './vueuseVender'
 
 /**
  * Throttle execution of a function. Especially useful for rate limiting
