@@ -8,9 +8,10 @@ import type {
 import { ref, shallowRef, toValue, watch } from 'vue'
 import { createContext } from './ctx'
 import { toArray } from './utils/general'
+import { pipe } from './utils/pipe'
 import { useDebounceFn } from './utils/useDebounceFn'
-import { useThrottleFn } from './utils/useThrottleFn'
 
+import { useThrottleFn } from './utils/useThrottleFn'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 
 export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
@@ -50,14 +51,16 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
       }
     }
 
-    const debounceExecute = ctx.optionsComposable.debounceInterval !== undefined
-      ? useDebounceFn(executeRequest, ctx.optionsComposable.debounceInterval)
-      : executeRequest
-    const throttleExecute = ctx.optionsComposable.throttleInterval !== undefined
-      ? useThrottleFn(debounceExecute, ctx.optionsComposable.throttleInterval)
-      : debounceExecute
+    const _execute = pipe(
+      (r: typeof executeRequest) => ctx.optionsComposable.debounceInterval !== undefined
+        ? useDebounceFn(r, ctx.optionsComposable.debounceInterval)
+        : r,
+      r => ctx.optionsComposable.throttleInterval !== undefined
+        ? useThrottleFn(r, ctx.optionsComposable.throttleInterval)
+        : r,
+    )(executeRequest)
 
-    const execute = () => toValue(ctx.optionsComposable.ready) ? throttleExecute() : Promise.resolve()
+    const execute = () => toValue(ctx.optionsComposable.ready) ? _execute() : Promise.resolve()
 
     const pollingInterval = ctx.optionsComposable.pollingInterval
     if (pollingInterval !== undefined)
