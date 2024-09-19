@@ -75,15 +75,52 @@ createTest(3004, 'useAsyncData', (_, getURL) => {
     const scope = effectScope()
 
     scope.run(() => {
-      useAsyncData(() => $fetch(getURL('ok'), {
-        onResponse: () => { times.value++ },
-      }), {
-        pollingInterval: 50,
-      })
+      useAsyncData(
+        () => $fetch(getURL('ok'), {
+          onResponse: () => { times.value++ },
+        }),
+        {
+          pollingInterval: 50,
+        },
+      )
     })
 
     expect(times.value).toBe(0)
     expect(await next(times)).toBe(1)
+    await sleep(80)
+    expect(times.value).toBe(2)
+    scope.stop()
+
+    await sleep(100)
+    expect(times.value).toBe(2)
+  })
+
+  it('polling with immediate', async () => {
+    const times = ref(0)
+
+    const scope = effectScope()
+
+    let execute: (() => Promise<void>) | undefined
+    scope.run(() => {
+      const { execute: _ } = useAsyncData(
+        () => $fetch(getURL('ok'), {
+          onResponse: () => { times.value++ },
+        }),
+        {
+          pollingInterval: 50,
+          immediate: false,
+        },
+      )
+      execute = _
+    })
+
+    expect(times.value).toBe(0)
+    await sleep(100)
+    expect(times.value).toBe(0)
+
+    await execute?.()
+
+    expect(times.value).toBe(1)
     await sleep(80)
     expect(times.value).toBe(2)
     scope.stop()

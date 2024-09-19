@@ -110,6 +110,18 @@ useAsyncData(() => $fetch('ok'), {
 // request to => 'ok'
 // wait 2 seconds...
 // request to => 'ok'
+
+const { execute } = useAsyncData(() => $fetch('ok'), {
+  pollingInterval: 2000, // 2 seconds
+  immediate: false
+})
+
+// ...
+// Will not poll until `execute` is called for the first time.
+
+await execute() // request to => 'ok'
+// wait 2 seconds...
+// request to => 'ok'
 ```
 
 Use the `debounceInterval` option to apply debouncing:

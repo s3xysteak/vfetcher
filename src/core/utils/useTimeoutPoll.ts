@@ -6,7 +6,11 @@ import { ref } from 'vue'
 import { useTimeoutFn } from './useTimeoutFn'
 import { tryOnScopeDispose } from './vueuseVender'
 
-/** @vueuse/core useTimeoutPoll */
+/**
+ * @vueuse/core useTimeoutPoll
+ *
+ * ! The difference is `resume` is an async function here.
+ */
 export function useTimeoutPoll(
   fn: () => void | Promise<void>,
   interval: MaybeRefOrGetter<number>,
@@ -24,10 +28,10 @@ export function useTimeoutPoll(
     start()
   }
 
-  function resume() {
+  async function resume() {
     if (!isActive.value) {
       isActive.value = true
-      loop()
+      await loop()
     }
   }
 
@@ -61,5 +65,5 @@ export interface UseTimeoutPollReturns {
   /**
    * Resume the effects
    */
-  resume: Fn
+  resume: () => Promise<void>
 }

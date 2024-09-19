@@ -51,7 +51,7 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
       }
     }
 
-    const _execute = pipe(
+    const executePipe = pipe(
       (r: typeof executeRequest) => ctx.optionsComposable.debounceInterval !== undefined
         ? useDebounceFn(r, ctx.optionsComposable.debounceInterval)
         : r,
@@ -60,16 +60,25 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
         : r,
     )(executeRequest)
 
-    const execute = () => toValue(ctx.optionsComposable.ready) ? _execute() : Promise.resolve()
+    const _execute = () => toValue(ctx.optionsComposable.ready) ? executePipe() : Promise.resolve()
 
-    const pollingInterval = ctx.optionsComposable.pollingInterval
-    if (pollingInterval !== undefined)
-      useTimeoutPoll(execute, pollingInterval, { immediate: ctx.optionsComposable.immediate })
+    let resume: (() => Promise<void>) | undefined
 
-    if (ctx.optionsComposable.immediate
-      && pollingInterval === undefined) {
-      execute()
+    let _isFirstRun = true
+    if (ctx.optionsComposable.pollingInterval !== undefined) {
+      const { resume: _ } = useTimeoutPoll(_execute, ctx.optionsComposable.pollingInterval)
+      resume = () => {
+        _isFirstRun = false
+        return _()
+      }
     }
+
+    const execute = resume
+      ? () => _isFirstRun ? resume() : _execute()
+      : _execute
+
+    if (ctx.optionsComposable.immediate)
+      execute()
 
     watch(
       ctx.optionsComposable.watch === false
