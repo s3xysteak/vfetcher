@@ -8,7 +8,7 @@ import type {
 import { computed, ref, toValue } from 'vue'
 import { useFetch } from '..'
 import { defaultOptionsKey } from './useFetch'
-import { objectGet, toArray } from './utils/general'
+import { get, toArray } from './utils/general'
 
 export function createUsePagination(defaultOptions: UsePaginationOptions<any> = {}) {
   const usePagination: UsePagination = function <T = any, R extends ResponseType = ResponseType>(
@@ -46,8 +46,8 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
       },
     })
 
-    const total = computed<number>(() => objectGet(val.data.value, totalKey, 0))
-    const pageTotal = computed<number>(() => objectGet(val.data.value, pageTotalKey, Math.ceil(total.value / pageSize.value)))
+    const total = computed<number>(() => get(val.data.value, totalKey, 0))
+    const pageTotal = computed<number>(() => get(val.data.value, pageTotalKey, Math.ceil(total.value / pageSize.value)))
 
     return {
       ...val,

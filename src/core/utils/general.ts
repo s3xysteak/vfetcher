@@ -12,15 +12,26 @@ export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {
   return Array.isArray(array) ? array : [array]
 }
 
-/** Lodash - get */
-export function objectGet(source: Record<string, any>, path: string, defaultValue: any = undefined) {
-  const paths = path.replace(/\[(\d+)\]/g, '.$1').split('.')
-  let result = source
-  for (const p of paths) {
-    result = new Object(result)[p]
-    if (result === undefined) {
-      return defaultValue
-    }
+/**
+ * Dynamically get a nested value from an array or
+ * object with a string.
+ *
+ * @example get(person, 'friends[0].name')
+ */
+export function get<TDefault = unknown>(value: any, path: string, defaultValue?: TDefault): TDefault {
+  const segments = path.split(/[.[\]]/g)
+  let current: any = value
+  for (const key of segments) {
+    if (current === null)
+      return defaultValue as TDefault
+    if (current === undefined)
+      return defaultValue as TDefault
+    const deQuoted = key.replace(/['"]/g, '')
+    if (deQuoted.trim() === '')
+      continue
+    current = current[deQuoted]
   }
-  return result
+  if (current === undefined)
+    return defaultValue as TDefault
+  return current
 }
