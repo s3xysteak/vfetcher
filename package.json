@@ -48,7 +48,7 @@
     "type:check": "tsc",
     "test": "vitest",
     "test:once": "vitest run",
-    "release": "tsc && esno ./scripts/release.ts",
+    "release": "tsc && bumpp",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -58,6 +58,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.6.0",
     "@types/node": "^22.5.4",
+    "bumpp": "^9.5.2",
     "eslint": "^9.10.0",
     "esno": "^4.7.0",
     "h3": "^1.12.0",
