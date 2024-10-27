@@ -1,8 +1,10 @@
 import type { ResponseType } from 'ofetch'
 import type { UseFetchOptions } from './types'
+import { clearUndefined } from './utils/general'
 
 export function createContext<R extends ResponseType>(options: UseFetchOptions<any, any, R>) {
   const {
+    /** composables options */
     immediate = true,
     watch = [],
     pollingInterval,
@@ -11,6 +13,17 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<a
     ready = true,
     transform = r => r,
 
+    /** watch options */
+    agent,
+    baseURL,
+    body,
+    dispatcher,
+    headers,
+    method,
+    params,
+    query,
+
+    /** ofetch options */
     cache,
     credentials,
     duplex,
@@ -34,8 +47,6 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<a
     signal,
     timeout,
     window,
-
-    ...optionsWatch
   } = options
 
   return {
@@ -48,7 +59,16 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<a
       ready,
       transform,
     },
-    optionsWatch,
+    optionsWatch: clearUndefined({
+      agent,
+      baseURL,
+      body,
+      dispatcher,
+      headers,
+      method,
+      params,
+      query,
+    }),
     options$fetch: {
       cache,
       credentials,

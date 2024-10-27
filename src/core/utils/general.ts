@@ -35,3 +35,10 @@ export function get<TDefault = unknown>(value: any, path: string, defaultValue?:
     return defaultValue as TDefault
   return current
 }
+
+/** Clear undefined fields from an object. It mutates the object */
+export function clearUndefined<T extends object>(obj: T): T {
+  // @ts-expect-error object
+  Object.keys(obj).forEach((key: string) => (obj[key] === undefined ? delete obj[key] : {}))
+  return obj
+}
