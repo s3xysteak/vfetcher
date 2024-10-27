@@ -223,7 +223,7 @@ Except for `execute/refresh`, all other variables are wrapped by ref:
 
 - `immediate`: A boolean value indicating whether to make a request during initialization. Defaults to true.
 - `watch`: Watches a set of reactive sources, similar to the first parameter type of the Vue `watch` method. When the reactive sources change, a new request will be made. By default, it watches the request URL and request parameters (detailed below), but you can manually set it to false to disable this feature.
-- `transform`: A function to pre-process the response of the handler.
+- `transform`: A function that can be used to alter handler function result after resolving..
 - `pollingInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the interval time for polling. By default, polling is not enabled.
 - `debounceInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the debounce delay time. By default, debounce is not enabled.
 - `throttleInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the throttle wait time. By default, throttling is not enabled.

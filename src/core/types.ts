@@ -31,6 +31,7 @@ export interface UseAsyncDataOptions<ResT, DataT> {
   /** Only request if true. Request will be prevented if false. */
   ready?: MaybeRefOrGetter<boolean>
 
+  /** A function that can be used to alter handler function result after resolving. */
   transform?: (input: ResT) => DataT | PromiseLike<DataT>
 }
 
