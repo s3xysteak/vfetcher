@@ -100,6 +100,25 @@ watch(status, (v) => {
 })
 ```
 
+通过 `transform` 选项对返回值进行预处理:
+
+```ts
+const { data } = useAsyncData(() => $fetch('post', {
+  method: 'post',
+  body: {
+    number: {
+      one: 1
+    }
+  }
+}), {
+  transform: (res: { number: { one: 1 } }) => res.number.one
+})
+
+// request to => 'post'
+// response `{ number: { one: 1 } }`
+data.value === 1 // true
+```
+
 Use the `pollingInterval` option to perform polling requests:
 
 ```ts
@@ -204,6 +223,7 @@ Except for `execute/refresh`, all other variables are wrapped by ref:
 
 - `immediate`: A boolean value indicating whether to make a request during initialization. Defaults to true.
 - `watch`: Watches a set of reactive sources, similar to the first parameter type of the Vue `watch` method. When the reactive sources change, a new request will be made. By default, it watches the request URL and request parameters (detailed below), but you can manually set it to false to disable this feature.
+- `transform`: A function to pre-process the response of the handler.
 - `pollingInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the interval time for polling. By default, polling is not enabled.
 - `debounceInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the debounce delay time. By default, debounce is not enabled.
 - `throttleInterval`: Can be a reactive value. Pass a `number`, in milliseconds, to indicate the throttle wait time. By default, throttling is not enabled.

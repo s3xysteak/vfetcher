@@ -10,11 +10,11 @@ import { useFetch } from '..'
 import { defaultOptionsKey } from './useFetch'
 import { get, toArray } from './utils/general'
 
-export function createUsePagination(defaultOptions: UsePaginationOptions<any> = {}) {
-  const usePagination: UsePagination = function <T = any, R extends ResponseType = ResponseType>(
+export function createUsePagination(defaultOptions: UsePaginationOptions<any, any> = {}) {
+  const usePagination: UsePagination = function <ResT = any, DataT = ResT, R extends ResponseType = ResponseType>(
     _req: UseFetchParams,
-    options: UsePaginationOptions<R> = {},
-  ): UsePaginationReturns<R, T> {
+    options: UsePaginationOptions<ResT, DataT, R> = {},
+  ): UsePaginationReturns<R, DataT> {
     const {
       pageCurrentKey = 'current',
       pageSizeKey = 'pageSize',
@@ -37,7 +37,7 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
     })
 
     const val = useFetch(_req, {
-      ...useFetchOptions,
+      ...useFetchOptions as any,
       watch: useFetchOptions.watch === false ? [] : [pageSize, pageCurrent, ...toArray(useFetchOptions.watch || [])],
       onRequest: [
         (context) => {

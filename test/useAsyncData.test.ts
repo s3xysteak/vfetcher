@@ -39,6 +39,20 @@ createTest(3004, 'useAsyncData', (_, getURL) => {
     expect(data.value).toBe('ok')
   })
 
+  it('transform', async () => {
+    const { data } = useAsyncData(() => $fetch(getURL('post'), {
+      method: 'post',
+      body: {
+        number: {
+          one: 1,
+        },
+      },
+    }), {
+      transform: (r: { number: { one: number } }) => r.number.one,
+    })
+    expect(await next(data)).toBe(1)
+  })
+
   it('watch option', async () => {
     const times = ref(0)
     const source = ref(false)

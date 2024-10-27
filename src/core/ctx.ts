@@ -1,7 +1,7 @@
 import type { ResponseType } from 'ofetch'
 import type { UseFetchOptions } from './types'
 
-export function createContext<R extends ResponseType>(options: UseFetchOptions<R>) {
+export function createContext<R extends ResponseType>(options: UseFetchOptions<any, any, R>) {
   const {
     immediate = true,
     watch = [],
@@ -9,6 +9,7 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<R
     debounceInterval,
     throttleInterval,
     ready = true,
+    transform = r => r,
 
     cache,
     credentials,
@@ -45,6 +46,7 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<R
       debounceInterval,
       throttleInterval,
       ready,
+      transform,
     },
     optionsWatch,
     options$fetch: {

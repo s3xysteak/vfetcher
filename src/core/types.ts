@@ -5,14 +5,14 @@ export type UseAsyncDataStatus = 'idle' | 'pending' | 'success' | 'error'
 
 // * useAsyncData
 export interface UseAsyncData {
-  <T = any>(
-    request: () => Promise<T>,
-    options?: UseAsyncDataOptions,
-  ): UseAsyncDataReturns<T>
-  create: (options?: UseAsyncDataOptions) => UseAsyncData
+  <ResT = any, DataT = ResT>(
+    request: () => Promise<ResT>,
+    options?: UseAsyncDataOptions<ResT, DataT>,
+  ): UseAsyncDataReturns<DataT>
+  create: (options?: UseAsyncDataOptions<any, any>) => UseAsyncData
 }
 
-export interface UseAsyncDataOptions {
+export interface UseAsyncDataOptions<ResT, DataT> {
   /** If make a request during initialization */
   immediate?: boolean
 
@@ -30,6 +30,8 @@ export interface UseAsyncDataOptions {
 
   /** Only request if true. Request will be prevented if false. */
   ready?: MaybeRefOrGetter<boolean>
+
+  transform?: (input: ResT) => DataT | PromiseLike<DataT>
 }
 
 export interface UseAsyncDataReturns<Data> {
@@ -59,11 +61,11 @@ export interface UseAsyncDataReturns<Data> {
 // * useFetch
 
 export interface UseFetch {
-  <T = any, R extends ResponseType = 'json'>(
+  <ResT = any, DataT = ResT, R extends ResponseType = 'json'>(
     _req: UseFetchParams,
-    options?: UseFetchOptions<R>,
-  ): UseFetchReturns<R, T>
-  create: (options?: UseFetchOptions) => UseFetch
+    options?: UseFetchOptions<ResT, DataT, R>,
+  ): UseFetchReturns<R, DataT>
+  create: (options?: UseFetchOptions<any, any>) => UseFetch
 }
 
 export type UseFetchParams = MaybeRefOrGetter<string | Request>
@@ -77,8 +79,8 @@ export interface UseFetchReactiveOptions {
   baseURL?: MaybeRefOrGetter<FetchOptions['baseURL']>
 }
 
-export type UseFetchOptions<R extends ResponseType = ResponseType> =
-  & UseAsyncDataOptions
+export type UseFetchOptions<ResT, DataT, R extends ResponseType = ResponseType> =
+  & UseAsyncDataOptions<ResT, DataT>
   & UseFetchReactiveOptions
   & Omit<FetchOptions<R>, keyof UseFetchReactiveOptions>
 
@@ -87,14 +89,14 @@ export type UseFetchReturns<R extends ResponseType = ResponseType, T = any> = Us
 // * UsePagination
 
 export interface UsePagination {
-  <T = any, R extends ResponseType = 'json'>(
+  <ResT = any, DataT = ResT, R extends ResponseType = 'json'>(
     _req: UseFetchParams,
-    options?: UsePaginationOptions<R>,
-  ): UsePaginationReturns<R, T>
-  create: (options?: UsePaginationOptions) => UsePagination
+    options?: UsePaginationOptions<ResT, DataT, R>,
+  ): UsePaginationReturns<R, DataT>
+  create: (options?: UsePaginationOptions<any, any>) => UsePagination
 }
 
-export interface UsePaginationOptions<R extends ResponseType = ResponseType> extends UseFetchOptions<R> {
+export interface UsePaginationOptions<ResT, DataT, R extends ResponseType = ResponseType> extends UseFetchOptions<ResT, DataT, R> {
   pageCurrentKey?: string
   pageSizeKey?: string
   defaultPageSize?: number

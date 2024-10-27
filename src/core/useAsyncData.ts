@@ -14,17 +14,17 @@ import { useDebounceFn } from './utils/useDebounceFn'
 import { useThrottleFn } from './utils/useThrottleFn'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 
-export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
-  const useAsyncData: UseAsyncData = function <T = any>(
-    request: () => Promise<T>,
-    options: UseAsyncDataOptions = {},
-  ): UseAsyncDataReturns<T> {
+export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any> = {}) {
+  const useAsyncData: UseAsyncData = function <ResT = any, DataT = ResT>(
+    request: () => Promise<ResT>,
+    options: UseAsyncDataOptions<ResT, DataT> = {},
+  ): UseAsyncDataReturns<DataT> {
     const ctx: { optionsComposable: ReturnType<typeof createContext>['optionsComposable'] }
     = createContext({ ...options, ...defaultOptions })
 
     const status = ref<UseAsyncDataStatus>('idle')
     const pending = ref(false)
-    const data: Ref<T | null> = shallowRef(null)
+    const data: Ref<DataT | null> = shallowRef(null)
     const error = ref<Error | null>(null)
 
     const executeRequest = async () => {
@@ -33,7 +33,7 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions = {}) {
         status.value = 'pending'
         pending.value = true
 
-        data.value = await request()
+        data.value = await ctx.optionsComposable.transform(await request())
 
         // on response
         status.value = 'success'

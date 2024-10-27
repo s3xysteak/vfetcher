@@ -14,12 +14,12 @@ import { toArray } from './utils/general'
 
 export const defaultOptionsKey = Symbol('defaultOptionsKey')
 
-export function createUseFetch(defaultOptions: UseFetchOptions<any> = {}) {
-  const useFetch: UseFetch = function <T = any, R extends ResponseType = 'json'>(
+export function createUseFetch(defaultOptions: UseFetchOptions<any, any> = {}) {
+  const useFetch: UseFetch = function <ResT = any, DataT = ResT, R extends ResponseType = 'json'>(
     _req: UseFetchParams,
-    options: UseFetchOptions<R> = {},
-  ): UseFetchReturns<R, T> {
-    const ctx = createContext<R>({ ...options, ...defaultOptions })
+    options: UseFetchOptions<ResT, DataT, R> = {},
+  ): UseFetchReturns<R, DataT> {
+    const ctx = createContext<R>({ ...options, ...defaultOptions } as any)
     const watchOptions = reactive(ctx.optionsWatch)
     const req = computed(() => toValue(_req))
 

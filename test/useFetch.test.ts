@@ -25,6 +25,15 @@ createTest(3001, 'useFetch', (listener, getURL) => {
     expect(await next(data)).toEqual({ one: '1' })
   })
 
+  it('binary', async () => {
+    const { data, execute } = useFetch(getURL('binary'), {
+      responseType: 'blob',
+      immediate: false,
+    })
+    await execute()
+    expect(data.value).toBeInstanceOf(Blob)
+  })
+
   it('ready', async () => {
     const ready = ref(false)
     const { data, execute } = useFetch(getURL('ok'), {

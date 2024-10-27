@@ -10,6 +10,13 @@ createTest(3002, 'usePagination', (listener, getURL) => {
     expect(await next(data)).toBe('ok')
   })
 
+  it('binary', async () => {
+    const { data } = usePagination(getURL('binary'), {
+      responseType: 'blob',
+    })
+    expect(await next(data)).toBeInstanceOf(Blob)
+  })
+
   it('returns', async () => {
     const { data, pageCurrent, total, pageSize } = usePagination(getURL('getByPage'))
     expect(await next(data)).toEqual({
