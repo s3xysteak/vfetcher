@@ -39,11 +39,13 @@ export function createUsePagination(defaultOptions: UsePaginationOptions<any> = 
     const val = useFetch(_req, {
       ...useFetchOptions,
       watch: useFetchOptions.watch === false ? [] : [pageSize, pageCurrent, ...toArray(useFetchOptions.watch || [])],
-      onRequest(context) {
-        context.options.query = assignPaginationKey(context.options.query)
-        context.options.params = assignPaginationKey(context.options.params)
-        useFetchOptions?.onRequest?.(context)
-      },
+      onRequest: [
+        (context) => {
+          context.options.query = assignPaginationKey(context.options.query)
+          context.options.params = assignPaginationKey(context.options.params)
+        },
+        ...toArray(useFetchOptions?.onRequest).filter(Boolean),
+      ],
     })
 
     const total = computed<number>(() => get(val.data.value, totalKey, 0))
