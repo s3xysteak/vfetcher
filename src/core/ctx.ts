@@ -58,6 +58,7 @@ export function createContext<R extends ResponseType>(options: UseFetchOptions<a
       throttleInterval,
       ready,
       transform,
+      default: options.default ?? (() => null),
     },
     optionsWatch: clearUndefined({
       agent,

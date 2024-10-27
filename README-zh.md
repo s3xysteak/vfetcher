@@ -224,6 +224,7 @@ useAsyncData(() => $fetch('ok'))
 - `immediate`: 一个布尔值，指示是否要在初始化时发出请求。默认为true。
 - `watch`: 监听一组响应式源，与 Vue `watch`方法的第一个参数类型相同。在响应源发生变化时，将会重新发出请求。默认情况下会监听请求URL和请求参数（详见下文），你也可以手动将其设置为false以关闭该功能。
 - `transform`: 一个在解析后可以用来修改 handler 结果的函数。
+- `default`: 一个函数，其返回值作为上文中 `data` 的初始值。
 - `pollingInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示轮询的间隔时间。默认不进行轮询。
 - `debounceInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示防抖的延迟时间。默认不进行防抖。
 - `throttleInterval`: 可以是响应式值。传入一个`number`，单位为毫秒，用于指示节流的等待时间。默认不进行节流。

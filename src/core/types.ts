@@ -33,6 +33,9 @@ export interface UseAsyncDataOptions<ResT, DataT> {
 
   /** A function that can be used to alter handler function result after resolving. */
   transform?: (input: ResT) => DataT | PromiseLike<DataT>
+
+  /** a factory function to set the default value of the data, before the async function resolves */
+  default?: () => DataT | null
 }
 
 export interface UseAsyncDataReturns<Data> {

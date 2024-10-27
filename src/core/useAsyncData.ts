@@ -24,7 +24,7 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any>
 
     const status = ref<UseAsyncDataStatus>('idle')
     const pending = ref(false)
-    const data: Ref<DataT | null> = shallowRef(null)
+    const data: Ref<DataT | null> = shallowRef(ctx.optionsComposable.default())
     const error = ref<Error | null>(null)
 
     const executeRequest = async () => {
