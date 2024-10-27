@@ -1,7 +1,7 @@
 {
   "name": "vfetcher",
   "type": "module",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": false,
   "packageManager": "pnpm@9.11.0",
   "description": "Vue composables for fetching data, based on unjs/ofetch",
