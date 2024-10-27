@@ -1,5 +1,5 @@
+import type { ResponseType } from 'ofetch'
 import type {
-  ResponseType,
   UseFetchParams,
   UsePagination,
   UsePaginationOptions,

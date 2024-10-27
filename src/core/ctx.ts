@@ -1,4 +1,5 @@
-import type { ResponseType, UseFetchOptions } from './types'
+import type { ResponseType } from 'ofetch'
+import type { UseFetchOptions } from './types'
 
 export function createContext<R extends ResponseType = ResponseType>(userOptions: UseFetchOptions<R>) {
   return resolveOptions<R>({ ...userOptions })

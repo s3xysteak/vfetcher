@@ -1,16 +1,7 @@
-import type { FetchOptions, MappedResponseType } from 'ofetch'
+import type { FetchOptions, MappedResponseType, ResponseType } from 'ofetch'
 import type { ComputedRef, MaybeRefOrGetter, Ref, WatchSource } from 'vue'
 
 export type UseAsyncDataStatus = 'idle' | 'pending' | 'success' | 'error'
-
-export interface ResponseMap {
-  blob: Blob
-  text: string
-  arrayBuffer: ArrayBuffer
-  stream: ReadableStream<Uint8Array>
-}
-
-export type ResponseType = keyof ResponseMap | 'json'
 
 // * useAsyncData
 export interface UseAsyncData {
