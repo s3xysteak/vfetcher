@@ -14,6 +14,29 @@ import { useDebounceFn } from './utils/useDebounceFn'
 import { useThrottleFn } from './utils/useThrottleFn'
 import { useTimeoutPoll } from './utils/useTimeoutPoll'
 
+type ExecutionPipeFn = (ctx: ReturnType<typeof createContext>) => (r: () => Promise<void>) => () => Promise<void>
+
+const debounce: ExecutionPipeFn = (ctx) => {
+  return r => ctx.optionsComposable.debounceInterval !== undefined
+    ? useDebounceFn(r, ctx.optionsComposable.debounceInterval)
+    : r
+}
+const throttle: ExecutionPipeFn = (ctx) => {
+  return r => ctx.optionsComposable.throttleInterval !== undefined
+    ? useThrottleFn(r, ctx.optionsComposable.throttleInterval)
+    : r
+}
+const polling: ExecutionPipeFn = (ctx) => {
+  return (r) => {
+    if (ctx.optionsComposable.pollingInterval === undefined)
+      return r
+
+    const { resume, isActive } = useTimeoutPoll(r, ctx.optionsComposable.pollingInterval)
+
+    return () => isActive.value ? r() : resume()
+  }
+}
+
 export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any> = {}) {
   const useAsyncData: UseAsyncData = function <ResT = any, DataT = ResT>(
     request: () => Promise<ResT>,
@@ -51,31 +74,11 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any>
       }
     }
 
-    const executePipe = pipe(
-      (r: typeof executeRequest) => ctx.optionsComposable.debounceInterval !== undefined
-        ? useDebounceFn(r, ctx.optionsComposable.debounceInterval)
-        : r,
-      r => ctx.optionsComposable.throttleInterval !== undefined
-        ? useThrottleFn(r, ctx.optionsComposable.throttleInterval)
-        : r,
-    )(executeRequest)
+    const executionPipe = [debounce, throttle, polling]
 
-    const _execute = () => toValue(ctx.optionsComposable.ready) ? executePipe() : Promise.resolve()
+    const executePipe: () => Promise<void> = pipe(...executionPipe.map(fn => fn(ctx as any)))(executeRequest)
 
-    let resume: (() => Promise<void>) | undefined
-
-    let _isFirstRun = true
-    if (ctx.optionsComposable.pollingInterval !== undefined) {
-      const { resume: _ } = useTimeoutPoll(_execute, ctx.optionsComposable.pollingInterval)
-      resume = () => {
-        _isFirstRun = false
-        return _()
-      }
-    }
-
-    const execute = resume
-      ? () => _isFirstRun ? resume() : _execute()
-      : _execute
+    const execute = () => toValue(ctx.optionsComposable.ready) ? executePipe() : Promise.resolve()
 
     if (ctx.optionsComposable.immediate)
       execute()

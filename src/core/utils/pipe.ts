@@ -71,6 +71,7 @@ export function pipe<T, A, B, C, D, E, F, G, H, I>(
   fn9: UnaryFunction<H, I>,
   ...fns: UnaryFunction<any, any>[]
 ): UnaryFunction<T, unknown>
+export function pipe(...fns: Array<UnaryFunction<any, any>>): UnaryFunction<any, any>
 
 /**
  * pipe() can be called on one or more functions, each of which can take one argument ("UnaryFunction")
