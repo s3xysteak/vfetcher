@@ -42,8 +42,7 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any>
     request: () => Promise<ResT>,
     options: UseAsyncDataOptions<ResT, DataT> = {},
   ): UseAsyncDataReturns<DataT> {
-    const ctx: { optionsComposable: ReturnType<typeof createContext>['optionsComposable'] }
-    = createContext({ ...options, ...defaultOptions })
+    const ctx = createContext({ ...options, ...defaultOptions })
 
     const status = ref<UseAsyncDataStatus>('idle')
     const pending = ref(false)
@@ -74,11 +73,16 @@ export function createUseAsyncData(defaultOptions: UseAsyncDataOptions<any, any>
       }
     }
 
-    const executionPipe = [debounce, throttle, polling]
+    const executionPipe: ExecutionPipeFn[] = [
+      debounce,
+      throttle,
+      polling,
+      ctx =>
+        r =>
+          () => toValue(ctx.optionsComposable.ready) ? r() : Promise.resolve(),
+    ]
 
-    const executePipe: () => Promise<void> = pipe(...executionPipe.map(fn => fn(ctx as any)))(executeRequest)
-
-    const execute = () => toValue(ctx.optionsComposable.ready) ? executePipe() : Promise.resolve()
+    const execute: () => Promise<void> = pipe(...executionPipe.map(fn => fn(ctx as any)))(executeRequest)
 
     if (ctx.optionsComposable.immediate)
       execute()

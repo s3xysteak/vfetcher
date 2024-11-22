@@ -1,8 +1,21 @@
-import type { ResponseType } from 'ofetch'
-import type { UseFetchOptions } from './types'
+import type { FetchOptions, ResponseType } from 'ofetch'
+import type { UseAsyncDataOptions, UseFetchOptions, UseFetchReactiveOptions } from './types'
 import { clearUndefined } from './utils/general'
 
-export function createContext<R extends ResponseType>(options: UseFetchOptions<any, any, R>) {
+export interface Context<R extends ResponseType = any> {
+  optionsComposable: Required<Omit<UseAsyncDataOptions<any, any>, 'pollingInterval' | 'debounceInterval' | 'throttleInterval'>>
+    & {
+      pollingInterval?: UseAsyncDataOptions<any, any>['pollingInterval']
+      debounceInterval?: UseAsyncDataOptions<any, any>['debounceInterval']
+      throttleInterval?: UseAsyncDataOptions<any, any>['throttleInterval']
+    }
+  optionsWatch: UseFetchReactiveOptions
+  options$fetch: Omit<FetchOptions<R>, keyof UseFetchReactiveOptions>
+}
+
+export function createContext(options: UseAsyncDataOptions<any, any>): { optionsComposable: Context['optionsComposable'] }
+export function createContext<R extends ResponseType>(options: UseFetchOptions<any, any, R>): Context<R>
+export function createContext<R extends ResponseType>(options: UseFetchOptions<any, any, R>): Context<R> {
   const {
     /** composables options */
     immediate = true,
